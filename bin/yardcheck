@@ -7,11 +7,4 @@ require 'yardcheck'
 $LOAD_PATH.unshift(File.expand_path(File.join('../test_app/lib')))
 require 'test_app'
 
-documentation = Yardcheck::Documentation.parse
-observations  = Yardcheck::SpecObserver.run
-
-puts 'Documented:'
-puts documentation.types
-puts
-puts 'Observed:'
-puts observations.types
+Yardcheck::Runner.run.check

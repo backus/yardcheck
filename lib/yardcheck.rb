@@ -7,8 +7,46 @@ require 'rspec'
 require 'yardcheck/version'
 
 module Yardcheck
+  class Runner
+    include Concord.new(:documentation, :observations)
+
+    def self.run
+      new(Yardcheck::Documentation.parse, Yardcheck::SpecObserver.run)
+    end
+
+    def check
+      union = {}
+
+      documentation.types.each do |documented_type|
+        entry = union[documented_type.fetch_values(:module, :method)] = {}
+        entry[:documentation] = documented_type
+      end
+
+      observations.types.each do |observed_type|
+        entry = union[observed_type.fetch_values(:module, :method)] ||= {}
+        entry[:observation] = observed_type
+      end
+
+      union.each do |(mod, method_name), entry|
+        documentation = entry.fetch(:documentation)
+        observation   = entry.fetch(:observation)
+
+        documented_params, documented_return = documentation.fetch_values(:params, :return_value)
+        observed_params, observed_return     = observation.fetch_values(:params, :return_value)
+
+        p observed_return
+        p documented_return
+        unless observed_return === documented_return
+          fail "Expected #{mod}#{method_name} to return #{documented_return} but observed #{observed_return}"
+        end
+      end
+
+      p union
+    end
+  end
+
   class Documentation
-    include Concord.new(:method_objects)
+    include Concord.new(:method_objects), Memoizable
 
     def self.parse
       # YARD doesn't write to .yardoc/ without this lock_for_writing and save
@@ -22,7 +60,7 @@ module Yardcheck
       new(YARD::Registry.all(:method))
     end
 
-    def types
+    memoize def types
       method_objects.map do |method_object|
         fail 'I am not ready for class methods!' unless method_object.scope == :instance
 
@@ -47,7 +85,7 @@ module Yardcheck
         {
           method:       method_name,
           'module':     owner,
-          params:       params,
+          params:       params.to_h,
           return_value: return_value
         }
       end
@@ -55,7 +93,7 @@ module Yardcheck
   end # Documentation
 
   class SpecObserver
-    include Concord.new(:events)
+    include Concord.new(:events), Memoizable
 
     def self.run
       events = []
@@ -97,7 +135,7 @@ module Yardcheck
       new(events)
     end
 
-    def types
+    memoize def types
       events
         .group_by { |entry| entry.fetch_values(:module, :method) }
         .map do |_, observations|
