@@ -1,0 +1,19 @@
+PATH
+  remote: ..
+  specs:
+    yardcheck (0.0.0)
+      yard (~> 0.9)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    yard (0.9.8)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  yardcheck!
+
+BUNDLED WITH
+   1.14.6

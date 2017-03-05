@@ -3,11 +3,7 @@
 require_relative './../lib/test_app'
 
 RSpec.describe TestApp do
-  it 'says hello' do
-    expect { TestApp.new.hello("John") }.to output("Hello, John\n").to_stdout
-  end
-
-  it 'says goodbye' do
-    expect { TestApp.new.bye("John") }.to output("Goodbye, John\n").to_stdout
+  it 'does math' do
+    expect(TestApp.new.add(2, 3)).to be(5)
   end
 end

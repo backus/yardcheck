@@ -1,15 +1,11 @@
 class TestApp
-  # Method with correct param definition
+  # Method with correct param definition and incorrect return
   #
-  # @param name [String]
-  def hello(name)
-    puts "Hello, #{name}"
-  end
-
-  # Method with incorrect param definition
+  # @param left [Integer]
+  # @param right [Integer]
   #
-  # @param name [Symbol]
-  def bye(name)
-    puts "Goodbye, #{name}"
+  # @return [String]
+  def add(left, right)
+    left + right
   end
 end
