@@ -68,7 +68,7 @@ module Yardcheck
         documented_params, documented_return = documentation.fetch_values(:params, :return_value)
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
-        unless observed_return === documented_return
+        unless observed_return == documented_return
           warn "Expected #{mod}##{method_name} to return #{documented_return} but observed #{observed_return}"
         end
       end
@@ -94,7 +94,7 @@ module Yardcheck
       method_objects.map do |method_object|
         param_tags       = method_object.tags(:param)
         return_value_tag = method_object.tags(:return).first
-        owner_name       = method_object.namespace.name
+        owner_name       = method_object.namespace.to_s
         method_name      = method_object.name.to_sym
 
         fail 'I am not ready for this yet!' unless owner_name
@@ -102,13 +102,13 @@ module Yardcheck
         params =
           param_tags.map do |param_tag|
             fail 'I am not ready for multiple param types!' unless param_tag.types.one?
-            [param_tag.name.to_sym, Object.const_get(param_tag.types.first)]
+            [param_tag.name.to_sym, const(param_tag.types.first)]
           end
 
-        fail 'I am not ready for multiple return types!' if return_value_tag && return_value_tag.types.size > 1
-        return_value = Object.const_get(return_value_tag.types.first) if return_value_tag
+        fail 'I am not ready for multiple return types!' if return_value_tag && return_value_tag.types.to_a.size > 1
+        return_value = const(return_value_tag.types.to_a.first) if return_value_tag
 
-        owner = Object.const_get(owner_name)
+        owner = const(owner_name)
         owner = owner.singleton_class if method_object.scope == :class
 
         {
@@ -118,6 +118,19 @@ module Yardcheck
           params:       params.to_h,
           return_value: return_value
         }
+      end.reject do |entry|
+        entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
+      end
+    end
+
+    private
+
+    def const(name)
+      return if name.nil?
+
+      begin
+        Object.const_get(name)
+      rescue NameError
       end
     end
   end # Documentation
@@ -126,8 +139,8 @@ module Yardcheck
     include Concord.new(:events), Memoizable
 
     def self.target?(namespace, scope)
-      if scope.singleton_class?
-        scope.to_s == "#<Class:#{namespace}>"
+      if scope.__send__(:singleton_class?)
+        scope.to_s =~ /\A#{Regexp.quote("#<Class:#{namespace}")}/
       else
         scope.name && scope.name.start_with?(namespace)
       end
@@ -146,7 +159,7 @@ module Yardcheck
 
           event = {
             type: tp.event,
-            scope: tp.defined_class.singleton_class? ? :class : :instance,
+            scope: tp.defined_class.__send__(:singleton_class?) ? :class : :instance,
             method: method_name,
             'module': observed_module
           }

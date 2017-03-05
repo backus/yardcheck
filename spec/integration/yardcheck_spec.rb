@@ -23,10 +23,10 @@ RSpec.describe 'test app integration' do
   end
 
   it 'reports documentation and observed types' do
-    expect_report('Expected TestApp#add to return String but observed Fixnum')
+    expect_report('Expected TestApp::Namespace#add to return String but observed Fixnum')
   end
 
   it 'reports documentation and observed types' do
-    expect_report('Expected #<Class:TestApp>#add to return String but observed Fixnum')
+    expect_report('Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum')
   end
 end
