@@ -174,6 +174,7 @@ module Yardcheck
       def resolve_type(name)
         case name
         when 'nil' then NilClass
+        when 'undefined' then :undefined
         else tag_const(name)
         end
       end
@@ -182,7 +183,9 @@ module Yardcheck
         if name.to_sym == yardoc.namespace.name
           unscoped_namespace
         else
-          resolve(unscoped_namespace, name)
+          from_namespace = resolve(unscoped_namespace, name)
+
+          from_namespace ? from_namespace : const(name)
         end
       end
 
@@ -203,16 +206,12 @@ module Yardcheck
     include Concord.new(:types)
 
     def self.parse(types)
-      normalized =
-        types.map do |type|
-          case type
-          when Class then type
-          else
-            fail "Unsure how to parse type #{type} (from #{types})"
-          end
-        end
-
-      new(normalized)
+      if types.include?(:undefined)
+        fail 'Cannot combined [undefined] with other types' unless types.one?
+        Undefined.new
+      else
+        new(types)
+      end
     end
 
     def match?(other)
@@ -223,6 +222,18 @@ module Yardcheck
 
     def inspect
       types.join(' | ')
+    end
+
+    class Undefined < self
+      include Concord.new
+
+      def match?(_)
+        true
+      end
+
+      def inspect
+        'Undefined'
+      end
     end
   end
 
