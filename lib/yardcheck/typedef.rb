@@ -35,6 +35,14 @@ module Yardcheck
       end
     end
 
+    class Collection < self
+      include Concord.new(:collection_class, :member_typedefs)
+
+      def match?(other)
+        other == collection_class
+      end
+    end
+
     class Undefined < self
       include Concord.new
 

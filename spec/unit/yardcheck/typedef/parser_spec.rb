@@ -24,11 +24,14 @@ RSpec.describe Yardcheck::Typedef::Parser do
     ]))
   end
 
-  pending 'handles array of items' do
+  it 'handles array of items' do
     expect(parse('Array<String>')).to eql(
-      Yardcheck::Typedef::Member.new(Yardcheck::Typedef.new([
-        Yardcheck::Typedef::Literal.new(String)
-      ]))
+      Yardcheck::Typedef.new([
+        Yardcheck::Typedef::Collection.new(
+          Array,
+          [Yardcheck::Typedef::Literal.new(String)]
+        )
+      ])
     )
   end
 end

@@ -16,6 +16,8 @@ module Yardcheck
 
       def resolve_yard_type(yard_type)
         case yard_type
+        when YARD::Tags::TypesExplainer::CollectionType
+          Collection.new(*resolve_type(yard_type.name), yard_type.types.flat_map(&method(:resolve_yard_type)))
         when YARD::Tags::TypesExplainer::Type
           types = resolve_type(yard_type.name)
           if types == [:undefined]
@@ -23,8 +25,6 @@ module Yardcheck
           else
             types.map { |type| Literal.new(type) }
           end
-        when YARD::Tags::TypesExplainer::CollectionType
-          Member.new(*parse_type(yard))
         else
           fail "wtf! #{yard_type}"
         end
