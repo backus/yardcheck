@@ -17,16 +17,19 @@ module Yardcheck
           options.string '--namespace', 'Namespace to check documentation for and watch methods calls for'
           options.string '--include',   'Path to add to load path'
           options.string '--require',   'Library to require'
+          options.string '--rspec',     'Arguments to give to rspec', default: 'spec'
         end.to_hash
 
-      namespace, include_path, require_target = arguments = options.fetch_values(:namespace, :include, :require)
+      namespace, include_path, require_target, rspec = arguments = options.fetch_values(:namespace, :include, :require, :rspec)
 
       fail 'All arguments are required' if arguments.any?(&:nil?)
 
       $LOAD_PATH.unshift(include_path)
       require require_target
 
-      new(Yardcheck::Documentation.parse, Yardcheck::SpecObserver.run(namespace))
+      rspec = rspec.split(' ')
+
+      new(Yardcheck::Documentation.parse, Yardcheck::SpecObserver.run(rspec, namespace))
     end
 
     def check
@@ -116,7 +119,7 @@ module Yardcheck
       end
     end
 
-    def self.run(namespace)
+    def self.run(rspec, namespace)
       events = []
 
       trace =
@@ -150,7 +153,7 @@ module Yardcheck
         end
 
       trace.enable do
-        RSpec::Core::Runner.run(['spec'])
+        RSpec::Core::Runner.run(rspec)
       end
 
       new(events)
