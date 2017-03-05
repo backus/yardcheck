@@ -163,9 +163,13 @@ module Yardcheck
       end
 
       def unscoped_namespace
-        const(yardoc.namespace.to_s)
+        const(qualified_namespace)
       end
       memoize :unscoped_namespace
+
+      def qualified_namespace
+        yardoc.namespace.to_s
+      end
 
       def tags(type)
         yardoc.tags(type)
@@ -175,7 +179,7 @@ module Yardcheck
         case name
         when 'nil' then [NilClass]
         when 'undefined' then [:undefined]
-        when 'Boolean'   then [TrueClass, FalseClass]
+        when 'Boolean', 'Bool' then [TrueClass, FalseClass]
         else [tag_const(name)]
         end
       end
@@ -184,11 +188,27 @@ module Yardcheck
         if name.to_sym == yardoc.namespace.name
           unscoped_namespace
         else
-          from_namespace = resolve(unscoped_namespace, name)
-
-          from_namespace ? from_namespace : const(name)
+          from_root = const(name)
+          from_root ? from_root : resolve_via_nesting(name)
         end
       end
+
+      def resolve_via_nesting(name)
+        nesting.each do |constant_scope|
+          resolution = resolve(constant_scope, name)
+          return resolution if resolution
+        end
+
+        nil
+      end
+
+      def nesting
+        qualified_namespace.split('::').reduce([]) do |namespaces, name|
+         parent = namespaces.last || Object
+         namespaces + [parent.const_get(name)]
+       end.reverse
+      end
+      memoize :nesting
 
       def const(name)
         resolve(Object, name)
