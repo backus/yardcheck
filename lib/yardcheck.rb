@@ -23,10 +23,11 @@ module Yardcheck
       end
 
       observations.types.each do |observed_type|
-        p observed_type
         entry = union[observed_type.fetch_values(:module, :method, :scope)] ||= {}
         entry[:observation] = observed_type
       end
+
+      union.select! { |_, value| value.key?(:documentation) && value.key?(:observation) }
 
       union.each do |(mod, method_name), entry|
         documentation = entry.fetch(:documentation)

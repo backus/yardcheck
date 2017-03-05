@@ -19,6 +19,14 @@ class TestApp
     left + right
   end
 
+  # Untested method with documentation
+  #
+  # @param str [String]
+  #
+  # @return [String]
+  def untested_method(str)
+  end
+
   def undocumented
   end
 end
