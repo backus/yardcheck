@@ -68,8 +68,8 @@ module Yardcheck
         documented_params, documented_return = documentation.fetch_values(:params, :return_value)
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
-        unless observed_return == documented_return || observed_return < documented_return
-          warn "Expected #{mod}##{method_name} to return #{documented_return} but observed #{observed_return}"
+        unless documented_return.match?(observed_return)
+          warn "Expected #{mod}##{method_name} to return #{documented_return.inspect} but observed #{observed_return}"
         end
       end
     end
@@ -134,17 +134,15 @@ module Yardcheck
 
       def params
         tags(:param).map do |param_tag|
-          fail 'I am not ready for multiple param types!' unless param_tag.types.one?
           param_name = param_tag.name.to_sym if param_tag.name
-          [param_name, tag_const(param_tag.types.first)]
+          [param_name, Typedef.new(param_tag.types.map(&method(:tag_const)))]
         end.select { |key, _| key }.to_h
       end
 
       def return_type
         return unless (tag = tags(:return).first)
 
-        name = tag.types.to_a.first
-        tag_const(name) if name
+        Typedef.new(tag.types.to_a.map(&method(:tag_const)))
       end
 
       def singleton?
@@ -182,6 +180,20 @@ module Yardcheck
       end
     end
   end # Documentation
+
+  class Typedef
+    include Concord.new(:types)
+
+    def match?(other)
+      types.any? do |type|
+        type == other || other < type
+      end
+    end
+
+    def inspect
+      types.join(' | ')
+    end
+  end
 
   class SpecObserver
     include Concord.new(:events), Memoizable

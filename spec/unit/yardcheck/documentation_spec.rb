@@ -20,11 +20,14 @@ RSpec.describe Yardcheck::Documentation do
   end
 
   it 'resolves parameters' do
-    expect(namespace_add.params).to eql(left: Integer, right: Integer)
+    expect(namespace_add.params).to eql(
+      left: Yardcheck::Typedef.new([Integer]),
+      right: Yardcheck::Typedef.new([Integer])
+    )
   end
 
   it 'resolves return value' do
-    expect(namespace_add.return_type).to be(String)
+    expect(namespace_add.return_type).to eql(Yardcheck::Typedef.new([String]))
   end
 
   it 'labels instance scope' do
@@ -36,7 +39,8 @@ RSpec.describe Yardcheck::Documentation do
   end
 
   it 'handles documented returns without types' do
-    expect(method_object('TestApp::Namespace#return_tag_without_type').return_type).to be(nil)
+    expect(method_object('TestApp::Namespace#return_tag_without_type').return_type)
+      .to eql(Yardcheck::Typedef.new([]))
   end
 
   it 'ignores documented params without names' do
