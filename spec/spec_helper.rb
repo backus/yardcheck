@@ -2,6 +2,8 @@
 
 require 'pathname'
 
+Bundler.with_clean_env { system('cd test_app && yard --no-cache --no-output > /dev/null') }
+
 module YardcheckSpec
   ROOT = Pathname.new(__dir__).parent
   TEST_APP = ROOT.join('test_app')

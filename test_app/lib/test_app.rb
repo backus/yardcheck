@@ -72,6 +72,10 @@ module TestApp
     def bool_return
     end
 
+    # @return [Array<String>]
+    def array_return
+    end
+
     class Parent
     end
 

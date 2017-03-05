@@ -85,7 +85,8 @@ module Yardcheck
       private
 
       def typedefs(tags)
-        Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).flatten.compact)
+        Typedef::Parser.new(qualified_namespace, tags.types.to_a).parse
+        # Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).flatten.compact)
       end
 
       def unscoped_namespace
@@ -100,41 +101,6 @@ module Yardcheck
       def tags(type)
         yardoc.tags(type)
       end
-
-      def resolve_type(name)
-        case name
-        when 'nil' then [NilClass]
-        when 'undefined' then [:undefined]
-        when 'Boolean', 'Bool' then [TrueClass, FalseClass]
-        else [tag_const(name)]
-        end
-      end
-
-      def tag_const(name)
-        if name.to_sym == yardoc.namespace.name
-          unscoped_namespace
-        else
-          from_root = const(name)
-          from_root ? from_root : resolve_via_nesting(name)
-        end
-      end
-
-      def resolve_via_nesting(name)
-        nesting.each do |constant_scope|
-          resolution = resolve(constant_scope, name)
-          return resolution if resolution
-        end
-
-        nil
-      end
-
-      def nesting
-        qualified_namespace.split('::').reduce([]) do |namespaces, name|
-          parent = namespaces.last || Object
-          namespaces + [resolve(parent, name)]
-        end.compact.reverse
-      end
-      memoize :nesting
 
       def const(name)
         resolve(Object, name)

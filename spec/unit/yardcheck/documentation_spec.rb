@@ -65,6 +65,11 @@ RSpec.describe Yardcheck::Documentation do
       .to eql(Yardcheck::Typedef.new([TrueClass, FalseClass]))
   end
 
+  it 'supports [Array<Object>]' do
+    expect(method_object('TestApp::Namespace#array_return').return_type)
+      .to eql(Yardcheck::Typedef::Member.new(Yardcheck::Typedef.new([String])))
+  end
+
   it 'ignores documented params without names' do
     expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
   end

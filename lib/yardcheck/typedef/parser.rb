@@ -1,0 +1,60 @@
+module Yardcheck
+  class Typedef
+    class Parser
+      include Concord.new(:namespace, :types), Adamantium
+
+      def parse
+        Typedef.parse(types.map(&method(:resolve_type)).flatten.compact)
+      end
+
+      def resolve_type(name)
+        case name
+        when 'nil' then [NilClass]
+        when 'undefined' then [:undefined]
+        when 'Boolean', 'Bool' then [TrueClass, FalseClass]
+        else [tag_const(name)]
+        end
+      end
+
+      def tag_const(name)
+        if namespace.end_with?(name)
+          namespace_constant
+        else
+          from_root = const(name)
+          from_root ? from_root : resolve_via_nesting(name)
+        end
+      end
+
+      def resolve_via_nesting(name)
+        nesting.each do |constant_scope|
+          resolution = resolve(constant_scope, name)
+          return resolution if resolution
+        end
+
+        nil
+      end
+
+      def nesting
+        namespace.split('::').reduce([]) do |namespaces, name|
+          parent = namespaces.last || Object
+          namespaces + [resolve(parent, name)]
+        end.compact.reverse
+      end
+      memoize :nesting
+
+      def namespace_constant
+        const(namespace)
+      end
+      memoize :namespace_constant
+
+      def const(name)
+        resolve(Object, name)
+      end
+
+      def resolve(receiver, name)
+        receiver.const_get(name)
+      rescue NameError
+      end
+    end
+  end
+end
