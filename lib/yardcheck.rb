@@ -64,7 +64,7 @@ module Yardcheck
         owner_name       = method_object.namespace.name
         method_name      = method_object.name.to_sym
 
-        fail 'I am not ready for this yet!' unless param_tags.size == 2 && return_value_tag && owner_name
+        fail 'I am not ready for this yet!' unless owner_name
 
         params =
           param_tags.map do |param_tag|
@@ -72,8 +72,8 @@ module Yardcheck
             [param_tag.name.to_sym, Object.const_get(param_tag.types.first)]
           end
 
-        fail 'I am not ready for multiple return types!' unless return_value_tag.types.one?
-        return_value = Object.const_get(return_value_tag.types.first)
+        fail 'I am not ready for multiple return types!' if return_value_tag && return_value_tag.types.size > 1
+        return_value = Object.const_get(return_value_tag.types.first) if return_value_tag
 
         owner = Object.const_get(owner_name)
         owner = owner.singleton_class if method_object.scope == :class

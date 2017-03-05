@@ -18,4 +18,7 @@ class TestApp
   def add(left, right)
     left + right
   end
+
+  def undocumented
+  end
 end
