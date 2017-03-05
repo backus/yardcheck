@@ -2,6 +2,7 @@
 
 require 'concord'
 require 'yard'
+require 'rspec'
 
 require 'yardcheck/version'
 
@@ -44,8 +45,8 @@ module Yardcheck
         owner = Object.const_get(owner_name)
 
         {
-          'module':     owner,
           method:       method_name,
+          'module':     owner,
           params:       params,
           return_value: return_value
         }
@@ -54,11 +55,61 @@ module Yardcheck
   end # Documentation
 
   class SpecObserver
+    include Concord.new(:events)
+
     def self.run
-      new
+      events = []
+
+      trace =
+        TracePoint.new(:call, :return) do |tp|
+          next unless tp.defined_class.name && tp.defined_class.name.start_with?('TestApp')
+
+
+          method_name     = tp.method_id
+          observed_module = tp.defined_class
+          parameter_names = observed_module.instance_method(method_name).parameters.map { |_, name| name }
+
+          event = {
+            type: tp.event,
+            method: method_name,
+            'module': observed_module
+          }
+
+          case tp.event
+          when :call
+            scope  = tp.binding
+            lvars  = scope.local_variables
+            locals = lvars.map { |lvar| [lvar, scope.local_variable_get(lvar)] }.to_h
+            event[:params] = locals.select { |lvar_name, _| parameter_names.include?(lvar_name) }
+          when :return
+            event[:return_value] = tp.return_value
+          else
+            fail
+          end
+
+          events << event
+        end
+
+      trace.enable do
+        RSpec::Core::Runner.run(['spec'])
+      end
+
+      new(events)
     end
 
     def types
+      events
+        .group_by { |entry| entry.fetch_values(:module, :method) }
+        .map do |_, observations|
+          observations.reduce(:merge).select do |key, _|
+            %i[module method params return_value].include?(key)
+          end
+        end.map do |params:, return_value:, **data|
+          param_types = params.map { |key, value| [key, value.class] }.to_h
+          return_value_type = return_value.class
+
+          data.merge(params: param_types, return_value: return_value_type).sort.to_h
+        end
     end
   end
 end # Yardcheck

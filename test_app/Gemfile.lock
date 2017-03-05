@@ -3,6 +3,7 @@ PATH
   specs:
     yardcheck (0.0.0)
       concord
+      rspec
       yard (~> 0.9)
 
 GEM
@@ -16,6 +17,7 @@ GEM
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
+    diff-lcs (1.2.5)
     equalizer (0.0.11)
     ice_nine (0.11.2)
     memoizable (0.4.2)
@@ -28,6 +30,19 @@ GEM
     pry-byebug (3.4.2)
       byebug (~> 9.0)
       pry (~> 0.10)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.4)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
     slop (3.6.0)
     thread_safe (0.3.6)
     yard (0.9.8)
