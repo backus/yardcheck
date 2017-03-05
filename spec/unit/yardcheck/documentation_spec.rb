@@ -50,6 +50,11 @@ RSpec.describe Yardcheck::Documentation do
       .to eql(Yardcheck::Typedef.new([NilClass]))
   end
 
+  it 'handles methods that return instance of the class' do
+    expect(method_object('TestApp::Namespace#return_self').return_type)
+      .to eql(Yardcheck::Typedef.new([TestApp::Namespace]))
+  end
+
   it 'ignores documented params without names' do
     expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
   end

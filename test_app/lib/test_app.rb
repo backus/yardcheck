@@ -59,6 +59,11 @@ module TestApp
     def return_nil
     end
 
+    # @return [Namespace]
+    def return_self
+      self
+    end
+
     class Parent
     end
 

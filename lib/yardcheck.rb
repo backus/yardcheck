@@ -78,8 +78,7 @@ module Yardcheck
   class Documentation
     include Concord.new(:yardocs), Memoizable
 
-    def self.parse
-      YARD::Registry.load!
+    def self.load_yard
       # YARD doesn't write to .yardoc/ without this lock_for_writing and save
       YARD::Registry.lock_for_writing do
         YARD.parse(['lib/**/*.rb'], [])
@@ -87,7 +86,10 @@ module Yardcheck
       end
 
       YARD::Registry.load!
+    end
 
+    def self.parse
+      load_yard
       new(YARD::Registry.all(:method))
     end
 
@@ -177,7 +179,11 @@ module Yardcheck
       end
 
       def tag_const(name)
-        resolve(unscoped_namespace, name)
+        if name.to_sym == yardoc.namespace.name
+          unscoped_namespace
+        else
+          resolve(unscoped_namespace, name)
+        end
       end
 
       def const(name)
