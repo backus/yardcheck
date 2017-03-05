@@ -90,7 +90,7 @@ module Yardcheck
       new(YARD::Registry.all(:method))
     end
 
-    memoize def types
+    def types
       method_objects.map do |method_object|
         param_tags       = method_object.tags(:param)
         return_value_tag = method_object.tags(:return).first
@@ -122,6 +122,7 @@ module Yardcheck
         entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
       end
     end
+    memoize :types
 
     private
 
