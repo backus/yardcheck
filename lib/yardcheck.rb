@@ -81,7 +81,7 @@ module Yardcheck
     def self.load_yard
       # YARD doesn't write to .yardoc/ without this lock_for_writing and save
       YARD::Registry.lock_for_writing do
-        YARD.parse(['lib/**/*.rb'], [])
+        YARD.parse(['lib/**/*.rb'], [], YARD::Logger::ERROR)
         YARD::Registry.save(true)
       end
 
