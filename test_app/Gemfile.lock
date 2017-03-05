@@ -2,17 +2,42 @@ PATH
   remote: ..
   specs:
     yardcheck (0.0.0)
+      concord
       yard (~> 0.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    adamantium (0.2.0)
+      ice_nine (~> 0.11.0)
+      memoizable (~> 0.4.0)
+    byebug (9.0.6)
+    coderay (1.1.1)
+    concord (0.1.5)
+      adamantium (~> 0.2.0)
+      equalizer (~> 0.0.9)
+    equalizer (0.0.11)
+    ice_nine (0.11.2)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
+    method_source (0.8.2)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-byebug (3.4.2)
+      byebug (~> 9.0)
+      pry (~> 0.10)
+    slop (3.6.0)
+    thread_safe (0.3.6)
     yard (0.9.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  pry
+  pry-byebug
   yardcheck!
 
 BUNDLED WITH
