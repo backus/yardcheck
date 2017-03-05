@@ -38,4 +38,8 @@ RSpec.describe Yardcheck::Documentation do
   it 'handles documented returns without types' do
     expect(method_object('TestApp::Namespace#return_tag_without_type').return_type).to be(nil)
   end
+
+  it 'ignores documented params without names' do
+    expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
+  end
 end

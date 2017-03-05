@@ -51,6 +51,10 @@ module TestApp
     def return_tag_without_type
     end
 
+    # @param [String]
+    def param_without_name(unnamed)
+    end
+
     class Parent
     end
 

@@ -135,8 +135,9 @@ module Yardcheck
       def params
         tags(:param).map do |param_tag|
           fail 'I am not ready for multiple param types!' unless param_tag.types.one?
-          [param_tag.name.to_sym, tag_const(param_tag.types.first)]
-        end.to_h
+          param_name = param_tag.name.to_sym if param_tag.name
+          [param_name, tag_const(param_tag.types.first)]
+        end.select { |key, _| key }.to_h
       end
 
       def return_type
@@ -234,9 +235,7 @@ module Yardcheck
       runner = RSpec::Core::Runner.new(config_options)
       runner.setup($stderr, $stdout)
 
-      trace.enable do
-        runner.run_specs(RSpec.world.ordered_example_groups)
-      end
+      runner.run_specs(RSpec.world.ordered_example_groups)
 
       new(events)
     end
