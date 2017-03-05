@@ -205,8 +205,8 @@ module Yardcheck
       def nesting
         qualified_namespace.split('::').reduce([]) do |namespaces, name|
          parent = namespaces.last || Object
-         namespaces + [parent.const_get(name)]
-       end.reverse
+         namespaces + [resolve(parent, name)]
+       end.compact.reverse
       end
       memoize :nesting
 
