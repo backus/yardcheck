@@ -18,12 +18,13 @@ module Yardcheck
       union = {}
 
       documentation.types.each do |documented_type|
-        entry = union[documented_type.fetch_values(:module, :method)] = {}
+        entry = union[documented_type.fetch_values(:module, :method, :scope)] = {}
         entry[:documentation] = documented_type
       end
 
       observations.types.each do |observed_type|
-        entry = union[observed_type.fetch_values(:module, :method)] ||= {}
+        p observed_type
+        entry = union[observed_type.fetch_values(:module, :method, :scope)] ||= {}
         entry[:observation] = observed_type
       end
 
@@ -34,14 +35,10 @@ module Yardcheck
         documented_params, documented_return = documentation.fetch_values(:params, :return_value)
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
-        p observed_return
-        p documented_return
         unless observed_return === documented_return
-          fail "Expected #{mod}#{method_name} to return #{documented_return} but observed #{observed_return}"
+          warn "Expected #{mod}##{method_name} to return #{documented_return} but observed #{observed_return}"
         end
       end
-
-      p union
     end
   end
 
@@ -62,8 +59,6 @@ module Yardcheck
 
     memoize def types
       method_objects.map do |method_object|
-        fail 'I am not ready for class methods!' unless method_object.scope == :instance
-
         param_tags       = method_object.tags(:param)
         return_value_tag = method_object.tags(:return).first
         owner_name       = method_object.namespace.name
@@ -81,10 +76,12 @@ module Yardcheck
         return_value = Object.const_get(return_value_tag.types.first)
 
         owner = Object.const_get(owner_name)
+        owner = owner.singleton_class if method_object.scope == :class
 
         {
           method:       method_name,
           'module':     owner,
+          scope:        method_object.scope,
           params:       params.to_h,
           return_value: return_value
         }
@@ -95,13 +92,22 @@ module Yardcheck
   class SpecObserver
     include Concord.new(:events), Memoizable
 
+    def self.target?(scope)
+      namespace = 'TestApp'
+
+      if scope.singleton_class?
+        scope.to_s == "#<Class:#{namespace}>"
+      else
+        scope.name && scope.name.start_with?(namespace)
+      end
+    end
+
     def self.run
       events = []
 
       trace =
         TracePoint.new(:call, :return) do |tp|
-          next unless tp.defined_class.name && tp.defined_class.name.start_with?('TestApp')
-
+          next unless target?(tp.defined_class)
 
           method_name     = tp.method_id
           observed_module = tp.defined_class
@@ -109,6 +115,7 @@ module Yardcheck
 
           event = {
             type: tp.event,
+            scope: tp.defined_class.singleton_class? ? :class : :instance,
             method: method_name,
             'module': observed_module
           }
@@ -137,10 +144,10 @@ module Yardcheck
 
     memoize def types
       events
-        .group_by { |entry| entry.fetch_values(:module, :method) }
+        .group_by { |entry| entry.fetch_values(:module, :method, :scope) }
         .map do |_, observations|
           observations.reduce(:merge).select do |key, _|
-            %i[module method params return_value].include?(key)
+            %i[module method params return_value scope].include?(key)
           end
         end.map do |params:, return_value:, **data|
           param_types = params.map { |key, value| [key, value.class] }.to_h

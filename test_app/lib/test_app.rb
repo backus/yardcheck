@@ -1,5 +1,15 @@
 class TestApp
-  # Method with correct param definition and incorrect return
+  # Singleton method with correct param definition and incorrect return
+  #
+  # @param left [Integer]
+  # @param right [Integer]
+  #
+  # @return [String]
+  def self.add(left, right)
+    left + right
+  end
+
+  # Instance method with correct param definition and incorrect return
   #
   # @param left [Integer]
   # @param right [Integer]
