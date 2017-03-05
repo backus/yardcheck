@@ -142,7 +142,8 @@ module Yardcheck
       def return_type
         return unless (tag = tags(:return).first)
 
-        tag_const(tag.types.first)
+        name = tag.types.to_a.first
+        tag_const(name) if name
       end
 
       def singleton?

@@ -47,6 +47,10 @@ module TestApp
       'str'
     end
 
+    # @return no type specified here
+    def return_tag_without_type
+    end
+
     class Parent
     end
 

@@ -9,7 +9,11 @@ RSpec.describe Yardcheck::Documentation do
     described_class.new(YardcheckSpec::YARDOCS.select { |doc| doc.title == title })
   end
 
-  let(:namespace_add) { doc_for('TestApp::Namespace#add').method_objects.first }
+  def method_object(title)
+    doc_for(title).method_objects.first
+  end
+
+  let(:namespace_add) { method_object('TestApp::Namespace#add') }
 
   it 'resolves constant' do
     expect(namespace_add.namespace).to be(TestApp::Namespace)
@@ -29,5 +33,9 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'exposes the selector' do
     expect(namespace_add.selector).to be(:add)
+  end
+
+  it 'handles documented returns without types' do
+    expect(method_object('TestApp::Namespace#return_tag_without_type').return_type).to be(nil)
   end
 end
