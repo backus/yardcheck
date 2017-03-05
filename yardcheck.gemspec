@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'yard', '~> 0.9'
   spec.add_dependency 'concord'
   spec.add_dependency 'rspec'
-  spec.add_dependency 'slop', '~> 4.2'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-byebug'
 end

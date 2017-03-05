@@ -3,7 +3,6 @@
 require 'concord'
 require 'yard'
 require 'rspec'
-require 'slop'
 
 require 'yardcheck/version'
 
@@ -12,13 +11,28 @@ module Yardcheck
     include Concord.new(:documentation, :observations)
 
     def self.run(args)
-      options =
-        Slop.parse(args) do |options|
-          options.string '--namespace', 'Namespace to check documentation for and watch methods calls for'
-          options.string '--include',   'Path to add to load path'
-          options.string '--require',   'Library to require'
-          options.string '--rspec',     'Arguments to give to rspec', default: 'spec'
-        end.to_hash
+      options = { rspec: 'spec' }
+
+      parser =
+        OptionParser.new do |opt|
+          opt.on('--namespace NS', 'Namespace to check documentation for and watch methods calls for') do |arg|
+            options[:namespace] = arg
+          end
+
+          opt.on('--include PATH',   'Path to add to load path') do |arg|
+            options[:include] = arg
+          end
+
+          opt.on('--require LIB',   'Library to require') do |arg|
+            options[:require] = arg
+          end
+
+          opt.on('--rspec ARGS',     'Arguments to give to rspec') do |arg|
+            options[:rspec] = arg
+          end
+        end
+
+      parser.parse(args)
 
       namespace, include_path, require_target, rspec = arguments = options.fetch_values(:namespace, :include, :require, :rspec)
 
