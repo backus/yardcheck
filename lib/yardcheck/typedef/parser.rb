@@ -4,7 +4,11 @@ module Yardcheck
       include Concord.new(:namespace, :types), Adamantium
 
       def parse
-        Typedef.parse(types.map(&method(:parse_type)).flatten.compact)
+        puts
+        puts
+        p namespace
+        p types
+        p Typedef.parse(types.map(&method(:parse_type)).flatten.compact)
       end
 
       def parse_type(type)
@@ -33,6 +37,7 @@ module Yardcheck
       def resolve_type(name)
         case name
         when 'nil' then [NilClass]
+        when 'self' then [namespace_constant]
         when 'undefined' then [:undefined]
         when 'Boolean', 'Bool' then [TrueClass, FalseClass]
         else [tag_const(name)]

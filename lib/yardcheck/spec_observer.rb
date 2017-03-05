@@ -71,7 +71,7 @@ module Yardcheck
           end
         end.map do |params:, return_value:, **data|
           param_types = params.map { |key, value| [key, value.class] }.to_h
-          return_value_type = return_value.class
+          return_value_type = Object.instance_method(:class).bind(return_value).call
 
           data.merge(params: param_types, return_value: return_value_type).sort.to_h
         end

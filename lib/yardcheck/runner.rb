@@ -62,6 +62,12 @@ module Yardcheck
         documented_params, documented_return = documentation.fetch_values(:params, :return_value)
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
+        documented_params.each do |name, typedef|
+          unless typedef.match?(observed_params.fetch(name))
+            warn "Expected #{mod}##{method_name} to receive #{documented_return.signature} for #{name} but observed #{observed_return}"
+          end
+        end
+
         unless documented_return.match?(observed_return)
           warn "Expected #{mod}##{method_name} to return #{documented_return.signature} but observed #{observed_return}"
         end

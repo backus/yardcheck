@@ -20,14 +20,22 @@ module Yardcheck
     end
 
     def signature
-      types.map { |type| type.signature }.join(' | ')
+      types.to_a.map { |type| type.signature }.join(' | ')
+    end
+
+    def +(other)
+      self.class.new((types + other.types).uniq)
     end
 
     class Literal < self
       include Concord.new(:type_class)
 
       def match?(other)
-        type_class == other || other < type_class
+        begin
+          type_class == other || other < type_class
+        rescue
+          require 'pry'; require 'pry-byebug'; binding.pry
+        end
       end
 
       def signature
@@ -40,6 +48,10 @@ module Yardcheck
 
       def match?(other)
         other == collection_class
+      end
+
+      def signature
+        "#{collection_class}<#{member_typedefs.map(&:signature)}>"
       end
     end
 

@@ -76,6 +76,11 @@ module TestApp
     def array_return
     end
 
+    # @return [String] in some cases
+    # @return [nil] otherwise
+    def multiple_returns
+    end
+
     class Parent
     end
 

@@ -69,9 +69,9 @@ module Yardcheck
       end
 
       def return_type
-        return unless (tag = tags(:return).first)
+        return if tags(:return).empty?
 
-        typedefs(tag)
+        tags(:return).map(&method(:typedefs)).reduce(:+)
       end
 
       def singleton?

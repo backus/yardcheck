@@ -86,6 +86,16 @@ RSpec.describe Yardcheck::Documentation do
       )
   end
 
+  it 'supports multiple @return' do
+    expect(method_object('TestApp::Namespace#multiple_returns').return_type)
+      .to eql(
+        Yardcheck::Typedef.new([
+          Yardcheck::Typedef::Literal.new(String),
+          Yardcheck::Typedef::Literal.new(NilClass),
+        ])
+      )
+  end
+
   it 'ignores documented params without names' do
     expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
   end
