@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class SpecObserver
     include Concord.new(:events), Memoizable
@@ -22,9 +24,9 @@ module Yardcheck
           parameter_names = observed_module.instance_method(method_name).parameters.map { |_, name| name }
 
           event = {
-            type: tp.event,
-            scope: tp.defined_class.__send__(:singleton_class?) ? :class : :instance,
-            method: method_name,
+            type:     tp.event,
+            scope:    tp.defined_class.__send__(:singleton_class?) ? :class : :instance,
+            method:   method_name,
             'module': observed_module
           }
 
@@ -74,5 +76,5 @@ module Yardcheck
           data.merge(params: param_types, return_value: return_value_type).sort.to_h
         end
     end
-  end
-end
+  end # SpecObserver
+end # Yardcheck

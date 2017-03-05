@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 module YardcheckSpec
@@ -8,7 +10,7 @@ module YardcheckSpec
   test_app_yardoc = TEST_APP.join('.yardoc')
   YARD::Registry.load!(test_app_yardoc.to_s)
   YARDOCS = YARD::Registry.all(:method)
-end
+end # YardcheckSpec
 
 $LOAD_PATH.unshift(YardcheckSpec::TEST_APP.join('lib').to_s)
 

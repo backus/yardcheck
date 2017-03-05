@@ -23,7 +23,7 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'resolves parameters' do
     expect(namespace_add.params).to eql(
-      left: Yardcheck::Typedef.new([Integer]),
+      left:  Yardcheck::Typedef.new([Integer]),
       right: Yardcheck::Typedef.new([Integer])
     )
   end

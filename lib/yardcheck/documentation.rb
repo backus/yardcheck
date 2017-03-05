@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Documentation
     include Concord.new(:yardocs), Memoizable
@@ -128,9 +130,9 @@ module Yardcheck
 
       def nesting
         qualified_namespace.split('::').reduce([]) do |namespaces, name|
-         parent = namespaces.last || Object
-         namespaces + [resolve(parent, name)]
-       end.compact.reverse
+          parent = namespaces.last || Object
+          namespaces + [resolve(parent, name)]
+        end.compact.reverse
       end
       memoize :nesting
 
@@ -139,11 +141,9 @@ module Yardcheck
       end
 
       def resolve(receiver, name)
-        begin
-          receiver.const_get(name)
-        rescue NameError
-        end
+        receiver.const_get(name)
+      rescue NameError
       end
-    end
+    end # MethodObject
   end # Documentation
-end
+end # Yardcheck

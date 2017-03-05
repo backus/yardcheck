@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Typedef
     include Concord.new(:types)
@@ -31,6 +33,6 @@ module Yardcheck
       def inspect
         'Undefined'
       end
-    end
-  end
-end
+    end # Undefined
+  end # Typedef
+end # Yardcheck

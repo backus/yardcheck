@@ -15,7 +15,7 @@ RSpec.describe 'test app integration' do
   def system(command)
     output = nil
 
-    Open3.popen3(command) do |stdin, stdout, stderr|
+    Open3.popen3(command) do |_stdin, _stdout, stderr|
       output = stderr.read
     end
 

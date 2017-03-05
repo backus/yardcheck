@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Runner
     include Concord.new(:documentation, :observations)
@@ -11,15 +13,15 @@ module Yardcheck
             options[:namespace] = arg
           end
 
-          opt.on('--include PATH',   'Path to add to load path') do |arg|
+          opt.on('--include PATH', 'Path to add to load path') do |arg|
             options[:include] = arg
           end
 
-          opt.on('--require LIB',   'Library to require') do |arg|
+          opt.on('--require LIB', 'Library to require') do |arg|
             options[:require] = arg
           end
 
-          opt.on('--rspec ARGS',     'Arguments to give to rspec') do |arg|
+          opt.on('--rspec ARGS', 'Arguments to give to rspec') do |arg|
             options[:rspec] = arg
           end
         end
@@ -65,5 +67,5 @@ module Yardcheck
         end
       end
     end
-  end
-end
+  end # Runner
+end # Yardcheck
