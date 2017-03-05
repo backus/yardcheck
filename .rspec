@@ -1,1 +1,3 @@
 --color
+--require yardcheck
+--require spec_helper

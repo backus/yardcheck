@@ -90,39 +90,44 @@ module Yardcheck
       new(YARD::Registry.all(:method))
     end
 
+    # def types
+    #   method_objects.map do |method_object|
+    #     param_tags       = method_object.tags(:param)
+    #     return_value_tag = method_object.tags(:return).first
+    #     owner_name       = method_object.namespace.to_s
+    #     method_name      = method_object.name.to_sym
+
+    #     fail 'I am not ready for this yet!' unless owner_name
+
+    #     params =
+    #       param_tags.map do |param_tag|
+    #         fail 'I am not ready for multiple param types!' unless param_tag.types.one?
+    #         [param_tag.name.to_sym, const(param_tag.types.first)]
+    #       end
+
+    #     fail 'I am not ready for multiple return types!' if return_value_tag && return_value_tag.types.to_a.size > 1
+    #     return_value = const(return_value_tag.types.to_a.first) if return_value_tag
+
+    #     owner = const(owner_name)
+    #     owner = owner.singleton_class if method_object.scope == :class
+
+    #     {
+    #       method:       method_name,
+    #       'module':     owner,
+    #       scope:        method_object.scope,
+    #       params:       params.to_h,
+    #       return_value: return_value
+    #     }
+    #   end
+    #   # .reject do |entry|
+    #   #   entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
+    #   # end
+    # end
+    # memoize :types
+
     def types
-      method_objects.map do |method_object|
-        param_tags       = method_object.tags(:param)
-        return_value_tag = method_object.tags(:return).first
-        owner_name       = method_object.namespace.to_s
-        method_name      = method_object.name.to_sym
-
-        fail 'I am not ready for this yet!' unless owner_name
-
-        params =
-          param_tags.map do |param_tag|
-            fail 'I am not ready for multiple param types!' unless param_tag.types.one?
-            [param_tag.name.to_sym, const(param_tag.types.first)]
-          end
-
-        fail 'I am not ready for multiple return types!' if return_value_tag && return_value_tag.types.to_a.size > 1
-        return_value = const(return_value_tag.types.to_a.first) if return_value_tag
-
-        owner = const(owner_name)
-        owner = owner.singleton_class if method_object.scope == :class
-
-        {
-          method:       method_name,
-          'module':     owner,
-          scope:        method_object.scope,
-          params:       params.to_h,
-          return_value: return_value
-        }
-      end.reject do |entry|
-        entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
-      end
+      method_objects.map { |method_object| MethodObject.new(method_object) }
     end
-    memoize :types
 
     private
 
@@ -132,6 +137,27 @@ module Yardcheck
       begin
         Object.const_get(name)
       rescue NameError
+      end
+    end
+
+    class MethodObject
+      include Concord.new(:yardoc)
+
+      def namespace
+        const(yardoc.namespace.to_s)
+      end
+
+      def params
+        yardoc.tags(:param).map do |param_tag|
+          fail 'I am not ready for multiple param types!' unless param_tag.types.one?
+          [param_tag.name.to_sym, const(param_tag.types.first)]
+        end.to_h
+      end
+
+      private
+
+      def const(name)
+        Object.const_get(name)
       end
     end
   end # Documentation
