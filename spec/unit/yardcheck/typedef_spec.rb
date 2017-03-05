@@ -2,7 +2,7 @@
 
 RSpec.describe Yardcheck::Typedef do
   def typedef(*types)
-    described_class.new(types)
+    described_class.new(types.map { |type| described_class::Literal.new(type) })
   end
 
   it 'matches exact type matches' do
@@ -23,9 +23,5 @@ RSpec.describe Yardcheck::Typedef do
       expect(definition.match?(String)).to be(true)
       expect(definition.match?(Symbol)).to be(false)
     end
-  end
-
-  it 'provides a custom #inspect' do
-    expect(typedef(Integer, String).inspect).to eql('Integer | String')
   end
 end

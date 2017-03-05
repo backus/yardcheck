@@ -4,7 +4,30 @@ module Yardcheck
       include Concord.new(:namespace, :types), Adamantium
 
       def parse
-        Typedef.parse(types.map(&method(:resolve_type)).flatten.compact)
+        Typedef.parse(types.map(&method(:parse_type)).flatten.compact)
+      end
+
+      def parse_type(type)
+        parsed_types = YARD::Tags::TypesExplainer::Parser.parse(type)
+        parsed_types.map do |parsed_type|
+          resolve_yard_type(parsed_type)
+        end
+      end
+
+      def resolve_yard_type(yard_type)
+        case yard_type
+        when YARD::Tags::TypesExplainer::Type
+          types = resolve_type(yard_type.name)
+          if types == [:undefined]
+            Undefined.new
+          else
+            types.map { |type| Literal.new(type) }
+          end
+        when YARD::Tags::TypesExplainer::CollectionType
+          Member.new(*parse_type(yard))
+        else
+          fail "wtf! #{yard_type}"
+        end
       end
 
       def resolve_type(name)

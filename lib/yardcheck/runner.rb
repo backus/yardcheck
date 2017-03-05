@@ -63,7 +63,7 @@ module Yardcheck
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
         unless documented_return.match?(observed_return)
-          warn "Expected #{mod}##{method_name} to return #{documented_return.inspect} but observed #{observed_return}"
+          warn "Expected #{mod}##{method_name} to return #{documented_return.signature} but observed #{observed_return}"
         end
       end
     end

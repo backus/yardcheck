@@ -23,13 +23,15 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'resolves parameters' do
     expect(namespace_add.params).to eql(
-      left:  Yardcheck::Typedef.new([Integer]),
-      right: Yardcheck::Typedef.new([Integer])
+      left:  Yardcheck::Typedef.new([Yardcheck::Typedef::Literal.new(Integer)]),
+      right: Yardcheck::Typedef.new([Yardcheck::Typedef::Literal.new(Integer)])
     )
   end
 
   it 'resolves return value' do
-    expect(namespace_add.return_type).to eql(Yardcheck::Typedef.new([String]))
+    expect(namespace_add.return_type).to eql(Yardcheck::Typedef.new([
+      Yardcheck::Typedef::Literal.new(String)
+    ]))
   end
 
   it 'labels instance scope' do
@@ -47,25 +49,32 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'handles returns with a literal nil' do
     expect(method_object('TestApp::Namespace#return_nil').return_type)
-      .to eql(Yardcheck::Typedef.new([NilClass]))
+      .to eql(Yardcheck::Typedef.new([
+        Yardcheck::Typedef::Literal.new(NilClass)
+      ]))
   end
 
   it 'handles methods that return instance of the class' do
     expect(method_object('TestApp::Namespace#return_self').return_type)
-      .to eql(Yardcheck::Typedef.new([TestApp::Namespace]))
+      .to eql(Yardcheck::Typedef.new([
+        Yardcheck::Typedef::Literal.new(TestApp::Namespace)
+      ]))
   end
 
   it 'supports [undefined]' do
     expect(method_object('TestApp::Namespace#undefined_return').return_type)
-      .to eql(Yardcheck::Typedef::Undefined.new)
+      .to eql(Yardcheck::Typedef.new([Yardcheck::Typedef::Undefined.new]))
   end
 
   it 'supports [Boolean]' do
     expect(method_object('TestApp::Namespace#bool_return').return_type)
-      .to eql(Yardcheck::Typedef.new([TrueClass, FalseClass]))
+      .to eql(Yardcheck::Typedef.new([
+        Yardcheck::Typedef::Literal.new(TrueClass),
+        Yardcheck::Typedef::Literal.new(FalseClass)
+      ]))
   end
 
-  it 'supports [Array<Object>]' do
+  pending 'supports [Array<Object>]' do
     expect(method_object('TestApp::Namespace#array_return').return_type)
       .to eql(Yardcheck::Typedef::Member.new(Yardcheck::Typedef.new([String])))
   end

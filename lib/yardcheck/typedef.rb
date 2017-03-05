@@ -15,12 +15,24 @@ module Yardcheck
 
     def match?(other)
       types.any? do |type|
-        type == other || other < type
+        type.match?(other)
       end
     end
 
-    def inspect
-      types.join(' | ')
+    def signature
+      types.map { |type| type.signature }.join(' | ')
+    end
+
+    class Literal < self
+      include Concord.new(:type_class)
+
+      def match?(other)
+        type_class == other || other < type_class
+      end
+
+      def signature
+        type_class.inspect
+      end
     end
 
     class Undefined < self
@@ -30,7 +42,7 @@ module Yardcheck
         true
       end
 
-      def inspect
+      def signature
         'Undefined'
       end
     end # Undefined
