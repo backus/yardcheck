@@ -36,5 +36,21 @@ module TestApp
     # @return [Array<Integer>]
     def ignoring_invalid_types(foo)
     end
+
+    # @return [TestApp::Namespace::Parent]
+    def returns_generic
+      Child.new
+    end
+
+    # @return [Child]
+    def documents_relative
+      'str'
+    end
+
+    class Parent
+    end
+
+    class Child < Parent
+    end
   end
 end

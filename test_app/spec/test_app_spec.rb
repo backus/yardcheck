@@ -14,4 +14,12 @@ RSpec.describe TestApp::Namespace do
   it 'has an undocumented method and that is fine' do
     expect(TestApp::Namespace.new.undocumented).to be(nil)
   end
+
+  it 'documents returning the parent but returns child' do
+    expect(TestApp::Namespace.new.returns_generic).to be_an_instance_of(TestApp::Namespace::Child)
+  end
+
+  it 'documents returning a relative namespace incorrectly' do
+    expect(TestApp::Namespace.new.documents_relative).to be_a(String)
+  end
 end

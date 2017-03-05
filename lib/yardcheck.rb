@@ -68,7 +68,7 @@ module Yardcheck
         documented_params, documented_return = documentation.fetch_values(:params, :return_value)
         observed_params, observed_return     = observation.fetch_values(:params, :return_value)
 
-        unless observed_return == documented_return
+        unless observed_return == documented_return || observed_return < documented_return
           warn "Expected #{mod}##{method_name} to return #{documented_return} but observed #{observed_return}"
         end
       end

@@ -13,20 +13,33 @@ RSpec.describe 'test app integration' do
   end
 
   def system(command)
+    output = nil
+
     Open3.popen3(command) do |stdin, stdout, stderr|
-      warn stderr.read
+      output = stderr.read
     end
+
+    output
   end
 
   def expect_report(report_substring)
-    expect { run_yardcheck }.to output(a_string_including(report_substring)).to_stderr
+    expect(run_yardcheck).to match(a_string_including(report_substring))
   end
 
-  it 'reports documentation and observed types' do
+  it 'reports expectation for instance method' do
     expect_report('Expected TestApp::Namespace#add to return String but observed Fixnum')
   end
 
-  it 'reports documentation and observed types' do
+  it 'reports expectation for singleton method' do
     expect_report('Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum')
+  end
+
+  pending 'reports expectation for method that should have returned an instance of a relative constant' do
+    expect_report('Expected TestApp::Namespace#documents_relative to return TestApp::Namespace::Child but observed String')
+  end
+
+  it 'does not report more than two violations' do
+    matches = run_yardcheck.scan(/^Expected .+ to return .+ but observed .+$/)
+    expect(matches.size).to be(2)
   end
 end
