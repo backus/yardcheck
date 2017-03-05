@@ -6,7 +6,9 @@ require 'yard'
 
 RSpec.describe Yardcheck::Documentation do
   def doc_for(title)
-    described_class.new(YardcheckSpec::YARDOCS.select { |doc| doc.title == title })
+    selection = YardcheckSpec::YARDOCS.select { |doc| doc.title == title }
+    fail "Unable to find doc with title #{title}" if selection.empty?
+    described_class.new(selection)
   end
 
   def method_object(title)
@@ -41,6 +43,11 @@ RSpec.describe Yardcheck::Documentation do
   it 'handles documented returns without types' do
     expect(method_object('TestApp::Namespace#return_tag_without_type').return_type)
       .to eql(Yardcheck::Typedef.new([]))
+  end
+
+  it 'handles returns with a literal nil' do
+    expect(method_object('TestApp::Namespace#return_nil').return_type)
+      .to eql(Yardcheck::Typedef.new([NilClass]))
   end
 
   it 'ignores documented params without names' do

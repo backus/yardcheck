@@ -55,6 +55,10 @@ module TestApp
     def param_without_name(unnamed)
     end
 
+    # @return [nil]
+    def return_nil
+    end
+
     class Parent
     end
 

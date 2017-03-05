@@ -79,6 +79,7 @@ module Yardcheck
     include Concord.new(:yardocs), Memoizable
 
     def self.parse
+      YARD::Registry.load!
       # YARD doesn't write to .yardoc/ without this lock_for_writing and save
       YARD::Registry.lock_for_writing do
         YARD.parse(['lib/**/*.rb'], [])
@@ -135,14 +136,14 @@ module Yardcheck
       def params
         tags(:param).map do |param_tag|
           param_name = param_tag.name.to_sym if param_tag.name
-          [param_name, Typedef.new(param_tag.types.map(&method(:tag_const)))]
+          [param_name, typedefs(param_tag)]
         end.select { |key, _| key }.to_h
       end
 
       def return_type
         return unless (tag = tags(:return).first)
 
-        Typedef.new(tag.types.to_a.map(&method(:tag_const)))
+        typedefs(tag)
       end
 
       def singleton?
@@ -155,6 +156,10 @@ module Yardcheck
 
       private
 
+      def typedefs(tags)
+        Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).compact)
+      end
+
       def unscoped_namespace
         const(yardoc.namespace.to_s)
       end
@@ -162,6 +167,13 @@ module Yardcheck
 
       def tags(type)
         yardoc.tags(type)
+      end
+
+      def resolve_type(name)
+        case name
+        when 'nil' then NilClass
+        else tag_const(name)
+        end
       end
 
       def tag_const(name)
@@ -183,6 +195,19 @@ module Yardcheck
 
   class Typedef
     include Concord.new(:types)
+
+    def self.parse(types)
+      normalized =
+        types.map do |type|
+          case type
+          when Class then type
+          else
+            fail "Unsure how to parse type #{type} (from #{types})"
+          end
+        end
+
+      new(normalized)
+    end
 
     def match?(other)
       types.any? do |type|
@@ -250,6 +275,10 @@ module Yardcheck
       runner.run_specs(RSpec.world.ordered_example_groups)
 
       new(events)
+    end
+
+    def self.fake_run(*)
+      new([])
     end
 
     memoize def types
