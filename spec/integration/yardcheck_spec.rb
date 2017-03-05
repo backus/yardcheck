@@ -7,7 +7,7 @@ RSpec.describe 'test app integration' do
     Bundler.with_clean_env do
       Dir.chdir('test_app') do
         system("bundle install --gemfile=#{File.join(Dir.pwd, 'Gemfile')}")
-        system('bundle exec yardcheck')
+        system('bundle exec yardcheck --namespace TestApp --include lib --require test_app')
       end
     end
   end

@@ -7,4 +7,4 @@ require 'yardcheck'
 $LOAD_PATH.unshift(File.expand_path(File.join('../test_app/lib')))
 require 'test_app'
 
-Yardcheck::Runner.run.check
+Yardcheck::Runner.run(ARGV).check

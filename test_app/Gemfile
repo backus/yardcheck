@@ -3,5 +3,5 @@
 source 'https://rubygems.org'
 
 gem 'yardcheck', path: '..'
-gem 'pry'
+gem 'pry', git: 'https://github.com/mvz/pry.git', branch: 'strip-readline-prompt-ignore-codes'
 gem 'pry-byebug'

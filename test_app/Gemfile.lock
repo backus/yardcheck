@@ -1,9 +1,19 @@
+GIT
+  remote: https://github.com/mvz/pry.git
+  revision: 1005381d2292bf9940ff0fe1b0093b05c29eb063
+  branch: strip-readline-prompt-ignore-codes
+  specs:
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+
 PATH
   remote: ..
   specs:
     yardcheck (0.0.0)
       concord
       rspec
+      slop (~> 4.2)
       yard (~> 0.9)
 
 GEM
@@ -23,10 +33,6 @@ GEM
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
-    pry (0.10.4)
-      coderay (~> 1.1.0)
-      method_source (~> 0.8.1)
-      slop (~> 3.4)
     pry-byebug (3.4.2)
       byebug (~> 9.0)
       pry (~> 0.10)
@@ -43,7 +49,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    slop (3.6.0)
+    slop (4.4.1)
     thread_safe (0.3.6)
     yard (0.9.8)
 
@@ -51,7 +57,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  pry
+  pry!
   pry-byebug
   yardcheck!
 

@@ -3,6 +3,7 @@
 require 'concord'
 require 'yard'
 require 'rspec'
+require 'slop'
 
 require 'yardcheck/version'
 
@@ -10,8 +11,22 @@ module Yardcheck
   class Runner
     include Concord.new(:documentation, :observations)
 
-    def self.run
-      new(Yardcheck::Documentation.parse, Yardcheck::SpecObserver.run)
+    def self.run(args)
+      options =
+        Slop.parse(args) do |options|
+          options.string '--namespace', 'Namespace to check documentation for and watch methods calls for'
+          options.string '--include',   'Path to add to load path'
+          options.string '--require',   'Library to require'
+        end.to_hash
+
+      namespace, include_path, require_target = arguments = options.fetch_values(:namespace, :include, :require)
+
+      fail 'All arguments are required' if arguments.any?(&:nil?)
+
+      $LOAD_PATH.unshift(include_path)
+      require require_target
+
+      new(Yardcheck::Documentation.parse, Yardcheck::SpecObserver.run(namespace))
     end
 
     def check
@@ -93,9 +108,7 @@ module Yardcheck
   class SpecObserver
     include Concord.new(:events), Memoizable
 
-    def self.target?(scope)
-      namespace = 'TestApp'
-
+    def self.target?(namespace, scope)
       if scope.singleton_class?
         scope.to_s == "#<Class:#{namespace}>"
       else
@@ -103,12 +116,12 @@ module Yardcheck
       end
     end
 
-    def self.run
+    def self.run(namespace)
       events = []
 
       trace =
         TracePoint.new(:call, :return) do |tp|
-          next unless target?(tp.defined_class)
+          next unless target?(namespace, tp.defined_class)
 
           method_name     = tp.method_id
           observed_module = tp.defined_class

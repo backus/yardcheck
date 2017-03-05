@@ -6,6 +6,8 @@ ruby File.read('.ruby-version').chomp
 
 gemspec
 
+gem 'pry', git: 'https://github.com/mvz/pry.git', branch: 'strip-readline-prompt-ignore-codes'
+
 group :test do
   gem 'rspec', '~> 3.5'
 end
