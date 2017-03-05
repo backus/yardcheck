@@ -34,12 +34,12 @@ RSpec.describe 'test app integration' do
     expect_report('Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum')
   end
 
-  pending 'reports expectation for method that should have returned an instance of a relative constant' do
+  it 'reports expectation for method that should have returned an instance of a relative constant' do
     expect_report('Expected TestApp::Namespace#documents_relative to return TestApp::Namespace::Child but observed String')
   end
 
   it 'does not report more than two violations' do
     matches = run_yardcheck.scan(/^Expected .+ to return .+ but observed .+$/)
-    expect(matches.size).to be(2)
+    expect(matches.size).to be(3)
   end
 end

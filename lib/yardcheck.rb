@@ -121,28 +121,28 @@ module Yardcheck
     end
 
     class MethodObject
-      include Concord.new(:yardoc)
+      include Concord.new(:yardoc), Adamantium::Flat
 
       def selector
         yardoc.name.to_sym
       end
 
       def namespace
-        ns = const(yardoc.namespace.to_s)
-        singleton? ? ns.singleton_class : ns
+        singleton? ? unscoped_namespace.singleton_class : unscoped_namespace
       end
+      memoize :namespace
 
       def params
         tags(:param).map do |param_tag|
           fail 'I am not ready for multiple param types!' unless param_tag.types.one?
-          [param_tag.name.to_sym, const(param_tag.types.first)]
+          [param_tag.name.to_sym, tag_const(param_tag.types.first)]
         end.to_h
       end
 
       def return_type
         return unless (tag = tags(:return).first)
 
-        const(tag.types.first)
+        tag_const(tag.types.first)
       end
 
       def singleton?
@@ -155,13 +155,26 @@ module Yardcheck
 
       private
 
+      def unscoped_namespace
+        const(yardoc.namespace.to_s)
+      end
+      memoize :unscoped_namespace
+
       def tags(type)
         yardoc.tags(type)
       end
 
+      def tag_const(name)
+        resolve(unscoped_namespace, name)
+      end
+
       def const(name)
+        resolve(Object, name)
+      end
+
+      def resolve(receiver, name)
         begin
-          Object.const_get(name)
+          receiver.const_get(name)
         rescue NameError
         end
       end
