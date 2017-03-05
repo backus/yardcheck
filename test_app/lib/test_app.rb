@@ -64,6 +64,14 @@ module TestApp
       self
     end
 
+    # @return [undefined]
+    def undefined_return
+    end
+
+    # @return [Boolean]
+    def bool_return
+    end
+
     class Parent
     end
 

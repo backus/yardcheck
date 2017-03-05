@@ -159,7 +159,7 @@ module Yardcheck
       private
 
       def typedefs(tags)
-        Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).compact)
+        Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).flatten.compact)
       end
 
       def unscoped_namespace
@@ -173,9 +173,10 @@ module Yardcheck
 
       def resolve_type(name)
         case name
-        when 'nil' then NilClass
-        when 'undefined' then :undefined
-        else tag_const(name)
+        when 'nil' then [NilClass]
+        when 'undefined' then [:undefined]
+        when 'Boolean'   then [TrueClass, FalseClass]
+        else [tag_const(name)]
         end
       end
 

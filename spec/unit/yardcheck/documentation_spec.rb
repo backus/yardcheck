@@ -55,6 +55,16 @@ RSpec.describe Yardcheck::Documentation do
       .to eql(Yardcheck::Typedef.new([TestApp::Namespace]))
   end
 
+  it 'supports [undefined]' do
+    expect(method_object('TestApp::Namespace#undefined_return').return_type)
+      .to eql(Yardcheck::Typedef::Undefined.new)
+  end
+
+  it 'supports [Boolean]' do
+    expect(method_object('TestApp::Namespace#bool_return').return_type)
+      .to eql(Yardcheck::Typedef.new([TrueClass, FalseClass]))
+  end
+
   it 'ignores documented params without names' do
     expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
   end
