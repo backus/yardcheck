@@ -226,8 +226,16 @@ module Yardcheck
           events << event
         end
 
+      config_options = RSpec::Core::ConfigurationOptions.new(rspec)
+      config = RSpec::Core::Configuration.new
+      RSpec.configure do |config|
+        config.around { |test| trace.enable(&test) }
+      end
+      runner = RSpec::Core::Runner.new(config_options)
+      runner.setup($stderr, $stdout)
+
       trace.enable do
-        RSpec::Core::Runner.run(rspec)
+        runner.run_specs(RSpec.world.ordered_example_groups)
       end
 
       new(events)
