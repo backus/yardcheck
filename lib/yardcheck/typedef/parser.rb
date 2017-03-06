@@ -4,11 +4,7 @@ module Yardcheck
       include Concord.new(:namespace, :types), Adamantium
 
       def parse
-        puts
-        puts
-        p namespace
-        p types
-        p Typedef.parse(types.map(&method(:parse_type)).flatten.compact)
+        Typedef.parse(types.map(&method(:parse_type)).flatten.compact)
       end
 
       def parse_type(type)

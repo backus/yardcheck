@@ -26,7 +26,8 @@ module Yardcheck
           'module':     method_object.namespace,
           scope:        method_object.scope,
           params:       method_object.params,
-          return_value: method_object.return_type
+          return_value: method_object.return_type,
+          location:     method_object.location
         }
       end.reject do |entry|
         entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
@@ -82,11 +83,14 @@ module Yardcheck
         yardoc.scope
       end
 
+      def location
+        [yardoc.file, yardoc.line]
+      end
+
       private
 
       def typedefs(tags)
         Typedef::Parser.new(qualified_namespace, tags.types.to_a).parse
-        # Typedef.parse(tags.types.to_a.map(&method(:resolve_type)).flatten.compact)
       end
 
       def unscoped_namespace
