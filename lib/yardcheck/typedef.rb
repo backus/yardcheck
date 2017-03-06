@@ -30,8 +30,8 @@ module Yardcheck
     class Literal < self
       include Concord.new(:type_class)
 
-      def match?(other)
-        type_class == other || other < type_class
+      def match?(value)
+        value.is_a?(type_class)
       end
 
       def signature

@@ -79,16 +79,16 @@ module Yardcheck
       include Concord.new(:events), Adamantium::Flat
 
       def invalid_param_usage(param_name, typedef, &block)
-        param_types
+        param_values
           .select { |param_case| param_case.key?(param_name)  }
           .map    { |param_case| param_case.fetch(param_name) }
-          .reject { |param_type| typedef.match?(param_type)   }
+          .reject { |param_value| typedef.match?(param_value)   }
           .each(&block)
       end
 
       def invalid_returns(typedef, &block)
-        return_types
-          .reject { |return_type| typedef.match?(return_type)   }
+        return_values
+          .reject { |return_Value| typedef.match?(return_Value)   }
           .each(&block)
       end
 
@@ -102,12 +102,26 @@ module Yardcheck
         unique_events.first
       end
 
+      def param_values
+        events_for(:call).map do |params:, **|
+          params
+        end
+      end
+      memoize :param_values
+
       def param_types
         events_for(:call).map do |params:, **|
           params.map { |key, value| [key, value.class] }.to_h
         end
       end
       memoize :param_types
+
+      def return_values
+        events_for(:return).map do |return_value:, **|
+          return_value
+        end.uniq
+      end
+      memoize :return_values
 
       def return_types
         events_for(:return).map do |return_value:, **|
