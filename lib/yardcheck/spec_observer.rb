@@ -104,36 +104,64 @@ module Yardcheck
 
       def param_values
         events_for(:call).map do |params:, **|
-          params
+          params.map do |key, value|
+            [key, ObservedValue.build(value)]
+          end.to_h
         end
       end
       memoize :param_values
 
-      def param_types
-        events_for(:call).map do |params:, **|
-          params.map { |key, value| [key, value.class] }.to_h
-        end
-      end
-      memoize :param_types
-
       def return_values
         events_for(:return).map do |return_value:, **|
-          return_value
+          ObservedValue.build(return_value)
         end.uniq
       end
       memoize :return_values
-
-      def return_types
-        events_for(:return).map do |return_value:, **|
-          Object.instance_method(:class).bind(return_value).call
-        end.uniq
-      end
-      memoize :return_types
 
       private
 
       def events_for(event_type)
         events.select { |type:, **| type.equal?(event_type) }
+      end
+    end
+
+    module ObservedValue
+      def self.build(object)
+        if object.is_a?(RSpec::Mocks::InstanceVerifyingDouble)
+          InstanceDouble.new(object)
+        else
+          object
+        end
+      end
+
+      class InstanceDouble
+        include Concord.new(:double)
+
+        def is_a?(klass)
+          target_class == klass || target_class < klass
+        end
+
+        def class
+          target_class
+        end
+
+        private
+
+        def target_class
+          if expired?
+            Object.const_get(doubled_module.description)
+          else
+            doubled_module.target
+          end
+        end
+
+        def expired?
+          double.instance_variable_get(:@__expired)
+        end
+
+        def doubled_module
+          double.instance_variable_get(:@doubled_module)
+        end
       end
     end
   end # SpecObserver
