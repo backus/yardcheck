@@ -44,7 +44,7 @@ module Yardcheck
       union = {}
 
       documentation.types.each do |documented_type|
-        entry = union[documented_type.fetch_values(:module, :method, :scope)] = {}
+        entry = union[documented_type.to_h.fetch_values(:module, :method, :scope)] = {}
         entry[:documentation] = documented_type
       end
 
@@ -59,11 +59,11 @@ module Yardcheck
         documentation = entry.fetch(:documentation)
         observation   = entry.fetch(:observation)
 
-        documented_params, documented_return = documentation.fetch_values(:params, :return_value)
+        documented_params, documented_return = documentation.params, documentation.return_type
         observed_params, observed_return     = observation.param_types, observation.return_value_type
 
         documented_params.each do |name, typedef|
-          check_param(typedef, observed_params, documented_params, name, mod, method_name, documentation.fetch(:location))
+          check_param(typedef, observed_params, documented_params, name, mod, method_name, documentation.location)
         end
 
         unless documented_return.match?(observed_return)

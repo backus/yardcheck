@@ -20,17 +20,8 @@ module Yardcheck
     end
 
     def types
-      method_objects.map do |method_object|
-        {
-          method:       method_object.selector,
-          'module':     method_object.namespace,
-          scope:        method_object.scope,
-          params:       method_object.params,
-          return_value: method_object.return_type,
-          location:     method_object.location
-        }
-      end.reject do |entry|
-        entry[:params].any? { |(_name, owner)| owner.nil? } || entry[:module].nil? || entry[:return_value].nil?
+      method_objects.reject do |method_object|
+        method_object.unknown_param? || method_object.unknown_module? || method_object.unknown_return_value?
       end
     end
     memoize :types
@@ -85,6 +76,29 @@ module Yardcheck
 
       def location
         [yardoc.file, yardoc.line]
+      end
+
+      def unknown_param?
+        params.any? { |(_name, owner)| owner.nil? }
+      end
+
+      def unknown_module?
+        namespace.nil?
+      end
+
+      def unknown_return_value?
+        return_type.nil?
+      end
+
+      def to_h
+        {
+          method:       selector,
+          'module':     namespace,
+          scope:        scope,
+          params:       params,
+          return_value: return_type,
+          location:     location
+        }
       end
 
       private
