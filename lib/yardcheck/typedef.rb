@@ -31,11 +31,7 @@ module Yardcheck
       include Concord.new(:type_class)
 
       def match?(other)
-        begin
-          type_class == other || other < type_class
-        rescue
-          require 'pry'; require 'pry-byebug'; binding.pry
-        end
+        type_class == other || other < type_class
       end
 
       def signature
@@ -47,7 +43,7 @@ module Yardcheck
       include Concord.new(:collection_class, :member_typedefs)
 
       def match?(other)
-        other == collection_class
+        Literal.new(collection_class).match?(other)
       end
 
       def signature
