@@ -47,7 +47,7 @@ module Yardcheck
     private
 
     def events_for(event_type)
-      events.select { |type:, **| type.equal?(event_type) }
+      events
     end
   end
 

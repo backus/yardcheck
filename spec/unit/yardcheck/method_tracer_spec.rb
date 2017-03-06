@@ -11,7 +11,7 @@ RSpec.describe Yardcheck::MethodTracer do
       end
 
       def instance_method_example(baz)
-        baz.upcase
+        Foo.singleton_method_example(baz)
       end
     end
 
@@ -21,7 +21,7 @@ RSpec.describe Yardcheck::MethodTracer do
       end
 
       def instance_method_example(baz)
-        baz.upcase
+        Qux.singleton_method_example(baz)
       end
     end
 
@@ -32,38 +32,22 @@ RSpec.describe Yardcheck::MethodTracer do
 
     tracer.trace do
       foo.instance_method_example(str)
-      Foo.singleton_method_example(str)
       qux.instance_method_example(str)
-      Qux.singleton_method_example(str)
     end
 
     expect(tracer.events).to eql([
       {
-        type:     :call,
-        scope:    :instance,
-        method:   :instance_method_example,
-        'module': Foo,
-        params:   { baz: 'Hello' }
-      },
-      {
-        type:         :return,
-        scope:        :instance,
-        method:       :instance_method_example,
-        'module':     Foo,
-        return_value: 'HELLO'
-      },
-      {
-        type:     :call,
         scope:    :class,
         method:   :singleton_method_example,
         'module': Foo.singleton_class,
-        params:   { baz: 'Hello' }
+        params:   { baz: 'Hello' },
+        return_value: 'HELLO'
       },
       {
-        type:         :return,
-        scope:        :class,
-        method:       :singleton_method_example,
-        'module':     Foo.singleton_class,
+        scope:    :instance,
+        method:   :instance_method_example,
+        'module': Foo,
+        params:   { baz: 'Hello' },
         return_value: 'HELLO'
       }
     ])

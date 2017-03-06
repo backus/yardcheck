@@ -9,31 +9,17 @@ RSpec.describe Yardcheck::Runner do
   let(:observed_events) do
     [
       {
-        type:     :call,
         scope:    :instance,
         method:   :add,
         'module': TestApp::Namespace,
-        params:   { left: 'foo', right: 3 }
-      },
-      {
-        type:         :return,
-        scope:        :instance,
-        method:       :add,
-        'module':     TestApp::Namespace,
+        params:   { left: 'foo', right: 3 },
         return_value: 5
       },
       {
-        type:     :call,
         scope:    :class,
         method:   :add,
         'module': TestApp::Namespace.singleton_class,
-        params:   { left: 2, right: 3 }
-      },
-      {
-        type:         :return,
-        scope:        :class,
-        method:       :add,
-        'module':     TestApp::Namespace.singleton_class,
+        params:   { left: 2, right: 3 },
         return_value: 5
       }
     ]
@@ -52,11 +38,11 @@ RSpec.describe Yardcheck::Runner do
     let(:observed_events) do
       [
         {
-          type:     :call,
           scope:    :instance,
           method:   :enumerable_param,
           'module': TestApp::Namespace,
-          params:   { list: %w[foo bar] }
+          params:   { list: %w[foo bar] },
+          return_value: nil
         }
       ]
     end
@@ -70,11 +56,11 @@ RSpec.describe Yardcheck::Runner do
     let(:observed_events) do
       [
         {
-          type:     :call,
           scope:    :instance,
           method:   :enumerable_param,
           'module': TestApp::Namespace,
-          params:   { list: 'foo' }
+          params:   { list: 'foo' },
+          return_value: nil
         }
       ]
     end
