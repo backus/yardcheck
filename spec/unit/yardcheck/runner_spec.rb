@@ -47,4 +47,42 @@ RSpec.describe Yardcheck::Runner do
       Expected TestApp::Namespace#add to return String but observed Fixnum
       OUTPUT
   end
+
+  context 'when observing a properly used method documented with Enumerable<*>' do
+    let(:observed_events) do
+      [
+        {
+          type:     :call,
+          scope:    :instance,
+          method:   :enumerable_param,
+          'module': TestApp::Namespace,
+          params:   { list: %w[foo bar] }
+        }
+      ]
+    end
+
+    it 'accepts the usage' do
+      expect { runner.check }.not_to output.to_stderr
+    end
+  end
+
+  context 'when observing an improperly used method documented with Enumerable<*>' do
+    let(:observed_events) do
+      [
+        {
+          type:     :call,
+          scope:    :instance,
+          method:   :enumerable_param,
+          'module': TestApp::Namespace,
+          params:   { list: 'foo' }
+        }
+      ]
+    end
+
+    it 'accepts the usage' do
+      expect { runner.check }.to output(<<~OUTPUT).to_stderr
+      Expected TestApp::Namespace#enumerable_param to receive Enumerable<["Integer"]> for list but observed String
+      OUTPUT
+    end
+  end
 end

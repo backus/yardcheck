@@ -81,6 +81,11 @@ module TestApp
     def multiple_returns
     end
 
+    # @param list [Enumerable<Integer>]
+    # @return [nil]
+    def enumerable_param(list)
+    end
+
     class Parent
     end
 

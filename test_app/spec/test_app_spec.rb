@@ -22,4 +22,8 @@ RSpec.describe TestApp::Namespace do
   it 'documents returning a relative namespace incorrectly' do
     expect(TestApp::Namespace.new.documents_relative).to be_a(String)
   end
+
+  it 'incorrectly documents a method as accepting Enumerable<String>' do
+    expect(TestApp::Namespace.new.enumerable_param('hi')).to be(nil)
+  end
 end
