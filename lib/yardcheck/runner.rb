@@ -56,26 +56,23 @@ module Yardcheck
       end
 
       comparison.each_return do |documentation, observed_return, documented_return|
-        unless documented_return.match?(observed_return)
-          mod = documentation.namespace
-          method_name = documentation.selector
-          warn "Expected #{mod}##{method_name} to return #{documented_return.signature} but observed #{observed_return}"
-        end
+        next if documented_return.match?(observed_return)
+
+        warn "Expected #{documentation.shorthand} to return #{documented_return.signature} but observed #{observed_return}"
       end
     end
 
     private
 
     def check_param(typedef, observed_params, documented_params, name, documentation)
-      mod, method_name, loc = documentation.namespace, documentation.selector, documentation.location
       observed_param =
         observed_params.fetch(name) do
-          warn "Expected to find param #{name} for #{mod}##{method_name} at #{loc}"
+          warn "Expected to find param #{name} for #{mod}##{method_name} at #{documentation.location}"
           return
         end
 
       unless typedef.match?(observed_param)
-        warn "Expected #{mod}##{method_name} to receive #{typedef.signature} for #{name} but observed #{observed_param}"
+        warn "Expected #{documentation.shorthand} to receive #{typedef.signature} for #{name} but observed #{observed_param}"
       end
     end
 

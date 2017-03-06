@@ -66,6 +66,10 @@ module Yardcheck
         [namespace, selector, scope]
       end
 
+      def shorthand
+        "#{namespace}##{selector}"
+      end
+
       private
 
       def typedefs(tags)
