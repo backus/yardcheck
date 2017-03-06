@@ -42,8 +42,8 @@ RSpec.describe Yardcheck::Runner do
   it 'compares the spec observations against the documentation' do
     expect { runner.check }
       .to output(<<~OUTPUT).to_stderr
-      Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
       Expected TestApp::Namespace#add to receive Integer for left but observed String
+      Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
       Expected TestApp::Namespace#add to return String but observed Fixnum
       OUTPUT
   end

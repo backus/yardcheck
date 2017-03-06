@@ -41,36 +41,32 @@ module Yardcheck
     end
 
     def check
-      union = {}
+      comparison = RuntimeComparison.new(documentation, observations)
 
-      documentation.types.each do |documented_type|
-        entry = union[documented_type.to_h.fetch_values(:module, :method, :scope)] = {}
-        entry[:documentation] = documented_type
-      end
-
-      observations.types.each do |observed_type|
-        entry = union[observed_type.to_h.fetch_values(:module, :method, :scope)] ||= {}
-        entry[:observation] = observed_type
-      end
-
-      union.select! { |_, value| value.key?(:documentation) && value.key?(:observation) }
-
-      union.each do |(mod, method_name), entry|
-        documentation = entry.fetch(:documentation)
-        observation   = entry.fetch(:observation)
-
-        documented_params, documented_return = documentation.params, documentation.return_type
-        observed_params, observed_return     = observation.param_types, observation.return_value_type
-
+      comparison.each_param do |documentation, observed_params, documented_params|
         documented_params.each do |name, typedef|
-          check_param(typedef, observed_params, documented_params, name, mod, method_name, documentation.location)
+          check_param(
+            typedef,
+            observed_params,
+            documented_params,
+            name,
+            documentation.namespace,
+            documentation.selector,
+            documentation.location
+          )
         end
+      end
 
+      comparison.each_return do |documentation, observed_return, documented_return|
         unless documented_return.match?(observed_return)
+          mod = documentation.namespace
+          method_name = documentation.selector
           warn "Expected #{mod}##{method_name} to return #{documented_return.signature} but observed #{observed_return}"
         end
       end
     end
+
+    private
 
     def check_param(typedef, observed_params, documented_params, name, mod, method_name, loc) # jesus christ
       observed_param =
@@ -81,6 +77,57 @@ module Yardcheck
 
       unless typedef.match?(observed_param)
         warn "Expected #{mod}##{method_name} to receive #{typedef.signature} for #{name} but observed #{observed_param}"
+      end
+    end
+
+    class RuntimeComparison
+      include Concord.new(:documentation, :spec_observation), Adamantium::Flat
+
+      def each_param
+        comparable_method_identifiers.map do |method_identifier|
+          observation   = observation_for(method_identifier)
+          documentation = documentation_for(method_identifier)
+
+          yield(documentation, observation.param_types, documentation.params)
+        end
+      end
+
+      def each_return
+        comparable_method_identifiers.map do |method_identifier|
+          observation   = observation_for(method_identifier)
+          documentation = documentation_for(method_identifier)
+
+          yield(documentation, observation.return_value_type, documentation.return_type)
+        end
+      end
+
+      private
+
+      def observation_for(identifier)
+        observation_table.fetch(identifier)
+      end
+
+      def documentation_for(identifier)
+        documentation_table.fetch(identifier)
+      end
+
+      def comparable_method_identifiers
+        documentation_table.keys & observation_table.keys
+      end
+      memoize :comparable_method_identifiers
+
+      def documentation_table
+        table(documentation)
+      end
+      memoize :documentation_table
+
+      def observation_table
+        table(spec_observation)
+      end
+      memoize :observation_table
+
+      def table(method_data_collection)
+        method_data_collection.types.map { |item| [item.method_identifier, item] }.to_h
       end
     end
   end # Runner

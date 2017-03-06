@@ -93,6 +93,10 @@ module Yardcheck
       def return_value_type
         Object.instance_method(:class).bind(return_value).call
       end
+
+      def method_identifier
+        [self.module, method, scope]
+      end
     end
   end # SpecObserver
 end # Yardcheck

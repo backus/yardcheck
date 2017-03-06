@@ -62,6 +62,10 @@ module Yardcheck
         }
       end
 
+      def method_identifier
+        [namespace, selector, scope]
+      end
+
       private
 
       def typedefs(tags)
