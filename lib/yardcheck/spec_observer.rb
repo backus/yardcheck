@@ -88,7 +88,7 @@ module Yardcheck
 
       def invalid_returns(typedef, &block)
         return_values
-          .reject { |return_Value| typedef.match?(return_Value)   }
+          .reject { |return_value| typedef.match?(return_value)   }
           .each(&block)
       end
 
