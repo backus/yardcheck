@@ -62,19 +62,37 @@ module Yardcheck
       new([])
     end
 
-    memoize def types
+    def types
+      method_calls.map(&:to_h)
+    end
+    memoize :types
+
+    def method_calls
       events
         .group_by { |entry| entry.fetch_values(:module, :method, :scope) }
         .map do |_, observations|
-          observations.reduce(:merge).select do |key, _|
-            %i[module method params return_value scope].include?(key)
-          end
-        end.map do |params:, return_value:, **data|
-          param_types = params.map { |key, value| [key, value.class] }.to_h
-          return_value_type = Object.instance_method(:class).bind(return_value).call
-
-          data.merge(params: param_types, return_value: return_value_type).sort.to_h
+          combined = observations.reduce(:merge)
+          combined.delete(:type)
+          MethodCall.new(combined)
         end
+    end
+
+    class MethodCall
+      include Anima.new(:method, :module, :scope, :params, :return_value)
+
+      def to_h
+        super.merge(return_value: return_value_type, params: param_types)
+      end
+
+      private
+
+      def param_types
+        params.map { |key, value| [key, value.class] }.to_h
+      end
+
+      def return_value_type
+        Object.instance_method(:class).bind(return_value).call
+      end
     end
   end # SpecObserver
 end # Yardcheck
