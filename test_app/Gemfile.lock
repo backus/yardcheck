@@ -2,6 +2,7 @@ PATH
   remote: ..
   specs:
     yardcheck (0.0.0)
+      anima
       concord
       rspec
       yard (~> 0.9)
@@ -9,9 +10,14 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    abstract_type (0.0.7)
     adamantium (0.2.0)
       ice_nine (~> 0.11.0)
       memoizable (~> 0.4.0)
+    anima (0.3.0)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.2)
+      equalizer (~> 0.0.11)
     byebug (9.0.6)
     coderay (1.1.1)
     concord (0.1.5)
