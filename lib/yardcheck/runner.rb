@@ -50,9 +50,7 @@ module Yardcheck
             observed_params,
             documented_params,
             name,
-            documentation.namespace,
-            documentation.selector,
-            documentation.location
+            documentation
           )
         end
       end
@@ -68,7 +66,8 @@ module Yardcheck
 
     private
 
-    def check_param(typedef, observed_params, documented_params, name, mod, method_name, loc) # jesus christ
+    def check_param(typedef, observed_params, documented_params, name, documentation)
+      mod, method_name, loc = documentation.namespace, documentation.selector, documentation.location
       observed_param =
         observed_params.fetch(name) do
           warn "Expected to find param #{name} for #{mod}##{method_name} at #{loc}"
