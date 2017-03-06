@@ -86,6 +86,16 @@ module TestApp
     def enumerable_param(list)
     end
 
+    # @param value [String]
+    # @return [nil]
+    def properly_tested_with_instance_double(value)
+    end
+
+    # @param value [String]
+    # @return [nil]
+    def improperly_tested_with_instance_double(value)
+    end
+
     class Parent
     end
 

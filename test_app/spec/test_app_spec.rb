@@ -26,4 +26,12 @@ RSpec.describe TestApp::Namespace do
   it 'incorrectly documents a method as accepting Enumerable<String>' do
     expect(TestApp::Namespace.new.enumerable_param('hi')).to be(nil)
   end
+
+  it 'properly tests a method with an instance double' do
+    expect(TestApp::Namespace.new.properly_tested_with_instance_double(instance_double(String))).to be(nil)
+  end
+
+  it 'improperly tests a method with an instance double' do
+    expect(TestApp::Namespace.new.improperly_tested_with_instance_double(instance_double(Integer))).to be(nil)
+  end
 end

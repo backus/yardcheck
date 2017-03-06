@@ -148,11 +148,7 @@ module Yardcheck
         private
 
         def target_class
-          if expired?
-            Object.const_get(doubled_module.description)
-          else
-            doubled_module.target
-          end
+          Object.const_get(doubled_module.description)
         end
 
         def expired?
