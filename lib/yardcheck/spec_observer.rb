@@ -63,9 +63,11 @@ module Yardcheck
     end
 
     def types
-      method_calls.map(&:to_h)
+      method_calls
     end
     memoize :types
+
+    private
 
     def method_calls
       events
@@ -83,8 +85,6 @@ module Yardcheck
       def to_h
         super.merge(return_value: return_value_type, params: param_types)
       end
-
-      private
 
       def param_types
         params.map { |key, value| [key, value.class] }.to_h
