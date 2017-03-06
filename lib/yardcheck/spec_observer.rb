@@ -72,30 +72,54 @@ module Yardcheck
     def method_calls
       events
         .group_by { |entry| entry.fetch_values(:module, :method, :scope) }
-        .map do |_, observations|
-          combined = observations.reduce(:merge)
-          combined.delete(:type)
-          MethodCall.new(combined)
-        end
+        .map { |_, observations| SessionObservations.new(observations) }
     end
 
-    class MethodCall
-      include Anima.new(:method, :module, :scope, :params, :return_value)
+    class SessionObservations
+      include Concord.new(:events), Adamantium::Flat
 
-      def to_h
-        super.merge(return_value: return_value_type, params: param_types)
+      def invalid_param_usage(param_name, typedef, &block)
+        param_types
+          .select { |param_case| param_case.key?(param_name)  }
+          .map    { |param_case| param_case.fetch(param_name) }
+          .reject { |param_type| typedef.match?(param_type)   }
+          .each(&block)
       end
 
-      def param_types
-        params.map { |key, value| [key, value.class] }.to_h
-      end
-
-      def return_value_type
-        Object.instance_method(:class).bind(return_value).call
+      def invalid_returns(typedef, &block)
+        return_types
+          .reject { |return_type| typedef.match?(return_type)   }
+          .each(&block)
       end
 
       def method_identifier
-        [self.module, method, scope]
+        unique_events = events.map do |event|
+          event.fetch_values(:module, :method, :scope)
+        end.uniq
+
+        fail 'wtf?' unless unique_events.one?
+
+        unique_events.first
+      end
+
+      def param_types
+        events_for(:call).map do |params:, **|
+          params.map { |key, value| [key, value.class] }.to_h
+        end
+      end
+      memoize :param_types
+
+      def return_types
+        events_for(:return).map do |return_value:, **|
+          Object.instance_method(:class).bind(return_value).call
+        end.uniq
+      end
+      memoize :return_types
+
+      private
+
+      def events_for(event_type)
+        events.select { |type:, **| type.equal?(event_type) }
       end
     end
   end # SpecObserver

@@ -43,34 +43,28 @@ module Yardcheck
     def check
       comparison = RuntimeComparison.new(documentation, observations)
 
-      comparison.each_param do |documentation, observed_params, documented_params|
+      comparison.each_param do |documentation, observation, documented_params|
         documented_params.each do |name, typedef|
           check_param(
             typedef,
-            observed_params,
+            observation,
             name,
             documentation
           )
         end
       end
 
-      comparison.each_return do |documentation, observed_return, documented_return|
-        next if documented_return.match?(observed_return)
-
-        warn "Expected #{documentation.shorthand} to return #{documented_return.signature} but observed #{observed_return}"
+      comparison.each_return do |documentation, observation, documented_return|
+        observation.invalid_returns(documented_return) do |observed_return|
+          warn "Expected #{documentation.shorthand} to return #{documented_return.signature} but observed #{observed_return}"
+        end
       end
     end
 
     private
 
-    def check_param(typedef, observed_params, name, documentation)
-      observed_param =
-        observed_params.fetch(name) do
-          warn "Expected to find param #{name} for #{mod}##{method_name} at #{documentation.location}"
-          return
-        end
-
-      unless typedef.match?(observed_param)
+    def check_param(typedef, observation, name, documentation)
+      observation.invalid_param_usage(name, typedef) do |observed_param|
         warn "Expected #{documentation.shorthand} to receive #{typedef.signature} for #{name} but observed #{observed_param}"
       end
     end
@@ -83,7 +77,7 @@ module Yardcheck
           observation   = observation_for(method_identifier)
           documentation = documentation_for(method_identifier)
 
-          yield(documentation, observation.param_types, documentation.params)
+          yield(documentation, observation, documentation.params)
         end
       end
 
@@ -92,7 +86,7 @@ module Yardcheck
           observation   = observation_for(method_identifier)
           documentation = documentation_for(method_identifier)
 
-          yield(documentation, observation.return_value_type, documentation.return_type)
+          yield(documentation, observation, documentation.return_type)
         end
       end
 
