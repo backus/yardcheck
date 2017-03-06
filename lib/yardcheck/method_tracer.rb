@@ -43,9 +43,11 @@ module Yardcheck
           .parameters.map { |_, name| name }
 
       scope  = trace_event.binding
-      lvars  = scope.local_variables
-      locals = lvars.map { |lvar| [lvar, scope.local_variable_get(lvar)] }.to_h
-      params = locals.select { |lvar_name, _| parameter_names.include?(lvar_name) }
+      params =
+        scope
+          .local_variables
+          .select { |lvar| parameter_names.include?(lvar) }
+          .map { |lvar| [lvar, scope.local_variable_get(lvar)] }.to_h
 
       event_details(trace_event).update(params: params)
     end
