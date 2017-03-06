@@ -19,36 +19,49 @@ module Yardcheck
     private
 
     def tracer
-      TracePoint.new(:call, :return) do |tp|
-        next unless target?(tp.defined_class)
-
-        method_name     = tp.method_id
-        observed_module = tp.defined_class
-        parameter_names = observed_module.instance_method(method_name).parameters.map { |_, name| name }
-
-        event = {
-          type:     tp.event,
-          scope:    tp.defined_class.__send__(:singleton_class?) ? :class : :instance,
-          method:   method_name,
-          'module': observed_module
-        }
-
-        case tp.event
-        when :call
-          scope  = tp.binding
-          lvars  = scope.local_variables
-          locals = lvars.map { |lvar| [lvar, scope.local_variable_get(lvar)] }.to_h
-          event[:params] = locals.select { |lvar_name, _| parameter_names.include?(lvar_name) }
-        when :return
-          event[:return_value] = tp.return_value
-        else
-          fail
-        end
-
-        seen << event
+      TracePoint.new(:call, :return) do |event|
+        process(event) if target?(event.defined_class)
       end
     end
     memoize :tracer
+
+    def process(trace_event)
+      event =
+        case trace_event.event
+        when :call   then process_call(trace_event)
+        when :return then process_return(trace_event)
+        end
+
+      seen << event
+    end
+
+    def process_call(trace_event)
+      parameter_names =
+        trace_event
+          .defined_class
+          .instance_method(trace_event.method_id)
+          .parameters.map { |_, name| name }
+
+      scope  = trace_event.binding
+      lvars  = scope.local_variables
+      locals = lvars.map { |lvar| [lvar, scope.local_variable_get(lvar)] }.to_h
+      params = locals.select { |lvar_name, _| parameter_names.include?(lvar_name) }
+
+      event_details(trace_event).update(params: params)
+    end
+
+    def process_return(trace_event)
+      event_details(trace_event).update(return_value: trace_event.return_value)
+    end
+
+    def event_details(event)
+      {
+        type:     event.event,
+        scope:    event.defined_class.__send__(:singleton_class?) ? :class : :instance,
+        method:   event.method_id,
+        'module': event.defined_class
+      }
+    end
 
     def target?(klass)
       if klass.__send__(:singleton_class?)
