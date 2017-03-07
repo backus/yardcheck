@@ -8,14 +8,14 @@ RSpec.describe Yardcheck::Runner do
 
   let(:observed_events) do
     [
-      Yardcheck::MethodTracer::Event.new(
+      Yardcheck::MethodCall.process(
         scope:    :instance,
         method:   :add,
         'module': TestApp::Namespace,
         params:   { left: 'foo', right: 3 },
         return_value: 5
       ),
-      Yardcheck::MethodTracer::Event.new(
+      Yardcheck::MethodCall.process(
         scope:    :class,
         method:   :add,
         'module': TestApp::Namespace.singleton_class,
@@ -37,7 +37,7 @@ RSpec.describe Yardcheck::Runner do
   context 'when observing a properly used method documented with Enumerable<*>' do
     let(:observed_events) do
       [
-        Yardcheck::MethodTracer::Event.new(
+        Yardcheck::MethodCall.process(
           scope:    :instance,
           method:   :enumerable_param,
           'module': TestApp::Namespace,
@@ -55,7 +55,7 @@ RSpec.describe Yardcheck::Runner do
   context 'when observing an improperly used method documented with Enumerable<*>' do
     let(:observed_events) do
       [
-        Yardcheck::MethodTracer::Event.new(
+        Yardcheck::MethodCall.process(
           scope:    :instance,
           method:   :enumerable_param,
           'module': TestApp::Namespace,

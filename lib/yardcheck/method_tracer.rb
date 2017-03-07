@@ -54,7 +54,7 @@ module Yardcheck
     end
 
     def process_return(trace_event)
-      seen << Event.new(call_stack.pop.merge(return_value: trace_event.return_value))
+      seen << MethodCall.process(call_stack.pop.merge(return_value: trace_event.return_value))
     end
 
     def event_details(event)
@@ -70,14 +70,6 @@ module Yardcheck
         klass.to_s =~ /\A#{Regexp.quote("#<Class:#{namespace}")}/
       else
         klass.name && klass.name.start_with?(namespace.name)
-      end
-    end
-
-    class Event
-      include Anima.new(:scope, :method, :module, :params, :return_value)
-
-      def method_identifier
-        [self.module, self.method, scope]
       end
     end
   end

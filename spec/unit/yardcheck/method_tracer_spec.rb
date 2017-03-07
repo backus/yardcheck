@@ -36,14 +36,14 @@ RSpec.describe Yardcheck::MethodTracer do
     end
 
     expect(tracer.events).to eql([
-      Yardcheck::MethodTracer::Event.new(
+      Yardcheck::MethodCall.process(
         scope:    :class,
         method:   :singleton_method_example,
         'module': Foo.singleton_class,
         params:   { baz: 'Hello' },
         return_value: 'HELLO'
       ),
-      Yardcheck::MethodTracer::Event.new(
+      Yardcheck::MethodCall.process(
         scope:    :instance,
         method:   :instance_method_example,
         'module': Foo,

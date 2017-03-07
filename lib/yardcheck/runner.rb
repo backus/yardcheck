@@ -56,7 +56,7 @@ module Yardcheck
 
       comparison.each_return do |documentation, observation, documented_return|
         observation.invalid_returns(documented_return) do |observed_return|
-          warn "Expected #{documentation.shorthand} to return #{documented_return.signature} but observed #{observed_return.class}"
+          warn "Expected #{documentation.shorthand} to return #{documented_return.signature} but observed #{observed_return.type}"
         end
       end
     end
@@ -65,7 +65,7 @@ module Yardcheck
 
     def check_param(typedef, observation, name, documentation)
       observation.invalid_param_usage(name, typedef) do |observed_param|
-        warn "Expected #{documentation.shorthand} to receive #{typedef.signature} for #{name} but observed #{observed_param.class}"
+        warn "Expected #{documentation.shorthand} to receive #{typedef.signature} for #{name} but observed #{observed_param.type}"
       end
     end
 

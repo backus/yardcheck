@@ -31,7 +31,7 @@ module Yardcheck
       include Concord.new(:type_class)
 
       def match?(value)
-        value.is_a?(type_class)
+        value.is?(type_class)
       end
 
       def signature

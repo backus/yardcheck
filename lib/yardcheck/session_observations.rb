@@ -28,16 +28,14 @@ module Yardcheck
 
     def param_values
       events_for(:call).map do |event|
-        event.params.map do |key, value|
-          [key, ObservedValue.build(value)]
-        end.to_h
+        event.params
       end
     end
     memoize :param_values
 
     def return_values
       events_for(:return).map do |event|
-        ObservedValue.build(event.return_value)
+        event.return_value
       end.uniq
     end
     memoize :return_values
@@ -46,42 +44,6 @@ module Yardcheck
 
     def events_for(event_type)
       events
-    end
-  end
-
-  module ObservedValue
-    def self.build(object)
-      if object.is_a?(RSpec::Mocks::InstanceVerifyingDouble)
-        InstanceDouble.new(object)
-      else
-        object
-      end
-    end
-
-    class InstanceDouble
-      include Concord.new(:double)
-
-      def is_a?(klass)
-        target_class == klass || target_class < klass
-      end
-
-      def class
-        target_class
-      end
-
-      private
-
-      def target_class
-        Object.const_get(doubled_module.description)
-      end
-
-      def expired?
-        double.instance_variable_get(:@__expired)
-      end
-
-      def doubled_module
-        double.instance_variable_get(:@doubled_module)
-      end
     end
   end
 end # Yardcheck
