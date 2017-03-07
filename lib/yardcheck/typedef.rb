@@ -62,5 +62,19 @@ module Yardcheck
         'Undefined'
       end
     end # Undefined
+
+    class Ducktype < self
+      include Concord.new(:method_name)
+
+      PATTERN = /\A\#(.+)\z/
+
+      def self.parse(name)
+        new(name[PATTERN, 1].to_sym)
+      end
+
+      def match?(other)
+        other.instance_methods.include?(method_name)
+      end
+    end
   end # Typedef
 end # Yardcheck

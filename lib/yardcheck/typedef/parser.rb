@@ -20,8 +20,9 @@ module Yardcheck
           Collection.new(*resolve_type(yard_type.name), yard_type.types.flat_map(&method(:resolve_yard_type)))
         when YARD::Tags::TypesExplainer::Type
           types = resolve_type(yard_type.name)
-          if types == [:undefined]
-            Undefined.new
+          case types
+          when :undefined then Undefined.new
+          when :ducktype  then Ducktype.parse(yard_type.name)
           else
             types.map { |type| Literal.new(type) }
           end
@@ -34,8 +35,9 @@ module Yardcheck
         case name
         when 'nil' then [NilClass]
         when 'self' then [namespace_constant]
-        when 'undefined' then [:undefined]
+        when 'undefined' then :undefined
         when 'Boolean', 'Bool' then [TrueClass, FalseClass]
+        when Ducktype::PATTERN then :ducktype
         else [tag_const(name)]
         end
       end
