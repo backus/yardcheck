@@ -3,8 +3,11 @@ module Yardcheck
     include Concord.new(:value)
 
     def self.process(value)
-      if value.is_a?(RSpec::Mocks::InstanceVerifyingDouble)
+      case value
+      when RSpec::Mocks::InstanceVerifyingDouble
         InstanceDouble.process(value)
+      when RSpec::Mocks::Double
+        Double.process(value)
       else
         new(value)
       end
@@ -31,6 +34,22 @@ module Yardcheck
 
       def type
         doubled_module
+      end
+    end
+
+    class Double < self
+      include Concord.new(:name)
+
+      def self.process(value)
+        new(value.instance_variable_get(:@name) || '(anonymous)')
+      end
+
+      def is?(_)
+        true
+      end
+
+      def type
+        '(double)'
       end
     end
   end
