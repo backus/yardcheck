@@ -5,45 +5,36 @@ module Yardcheck
     include Concord.new(:events), Adamantium::Flat
 
     def invalid_param_usage(param_name, typedef, &block)
-      param_values
-        .select { |param_case| param_case.key?(param_name)  }
-        .map    { |param_case| param_case.fetch(param_name) }
-        .reject { |param_value| typedef.match?(param_value)   }
-        .each(&block)
+      param_values.each do |param_case|
+        next unless param_case.key?(param_name)
+        value = param_case.fetch(param_name)
+
+        yield(value) unless typedef.match?(value)
+      end
     end
 
-    def invalid_returns(typedef, &block)
-      return_values
-        .reject { |return_value| typedef.match?(return_value) }
-        .each(&block)
+    def invalid_returns(typedef)
+      return_values.each do |return_value|
+        yield(return_value) unless typedef.match?(return_value)
+      end
     end
 
     def method_identifier
-      unique_events = events.map(&:method_identifier).uniq
-
-      fail 'wtf?' unless unique_events.one?
-
-      unique_events.first
+      collection(:method_identifier).first
     end
 
     def param_values
-      events_for(:call).map do |event|
-        event.params
-      end
+      collection(:params)
     end
     memoize :param_values
 
     def return_values
-      events_for(:return).map do |event|
-        event.return_value
-      end.uniq
+      collection(:return_value)
     end
     memoize :return_values
 
-    private
-
-    def events_for(event_type)
-      events
+    def collection(attribute)
+      events.map(&attribute).uniq
     end
   end
 end # Yardcheck
