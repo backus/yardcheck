@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Yardcheck
-
   class MethodTracer
     include Concord.new(:namespace, :seen, :call_stack), Memoizable
 
@@ -54,7 +53,9 @@ module Yardcheck
     end
 
     def process_return(trace_event)
-      seen << MethodCall.process(call_stack.pop.merge(return_value: trace_event.return_value))
+      seen << MethodCall.process(
+        call_stack.pop.merge(return_value: trace_event.return_value)
+      )
     end
 
     def event_details(event)

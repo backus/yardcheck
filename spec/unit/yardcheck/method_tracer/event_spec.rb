@@ -18,8 +18,8 @@ RSpec.describe Yardcheck::MethodCall do
         scope:    :instance,
         method:   :foo,
         'module': Bar,
-        params:   { baz: described_class::InstanceDouble.new(String) },
-        return_value: described_class::InstanceDouble.new(Symbol)
+        params:   { baz: Yardcheck::TestValue::InstanceDouble.new(String) },
+        return_value: Yardcheck::TestValue::InstanceDouble.new(Symbol)
       )
     )
   end
