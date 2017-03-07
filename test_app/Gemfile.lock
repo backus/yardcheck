@@ -3,6 +3,7 @@ PATH
   specs:
     yardcheck (0.0.0)
       anima
+      coderay (~> 1.1)
       concord
       rspec
       yard (~> 0.9)

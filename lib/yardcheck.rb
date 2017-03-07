@@ -4,6 +4,7 @@ require 'anima'
 require 'concord'
 require 'yard'
 require 'rspec'
+require 'coderay'
 
 require 'yardcheck/version'
 require 'yardcheck/runner'

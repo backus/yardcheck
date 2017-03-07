@@ -1,9 +1,16 @@
 module Yardcheck
   class Violation
-    class Return
+    def warning
+      indented_source = documentation.source.gsub(/^/, '    ')
+      source = "\n#{CodeRay.encode(indented_source, :ruby, :terminal)}\n"
+
+      "#{explanation}\n#{source}\n"
+    end
+
+    class Return < self
       include Concord.new(:documentation, :observation, :observed_value)
 
-      def warning
+      def explanation
         shorthand     = documentation.shorthand
         signature     = documentation.return_type.signature
         observed_type = observed_value.type
@@ -13,7 +20,7 @@ module Yardcheck
       end
     end
 
-    class Param
+    class Param < self
       include Anima.new(
         :documentation,
         :observation,
@@ -21,7 +28,7 @@ module Yardcheck
         :observed_value
       )
 
-      def warning
+      def explanation
         shorthand     = documentation.shorthand
         signature     = documentation.param(param_name).signature
         name          = param_name

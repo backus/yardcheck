@@ -74,7 +74,36 @@ module Yardcheck
         "#{namespace}##{selector}"
       end
 
+      def source
+        [documentation_source, yardoc.source].join("\n")
+      end
+
       private
+
+      def documentation_source
+        documentation_start = documentation_end = source_starting_line - 1
+
+        until documentation_start == 0 || source_line_at(documentation_start) !~ /^\s*#/
+          documentation_start -= 1
+        end
+
+        file_source[(documentation_start)..(documentation_end - 1)].join("\n")
+      end
+
+      def source_starting_line
+        location.fetch(1)
+      end
+
+      def source_line_at(lineno)
+        file_source[lineno - 1]
+      end
+
+      def file_source
+        File.read(location.first).split("\n").map do |line|
+          line.gsub(/^\s+/, '')
+        end
+      end
+      memoize :file_source
 
       def typedefs(tags)
         Typedef::Parser.new(qualified_namespace, tags.types.to_a).parse
