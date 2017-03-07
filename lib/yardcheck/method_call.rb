@@ -16,5 +16,9 @@ module Yardcheck
     def method_identifier
       [namespace, selector, scope]
     end
+
+    def initialize?
+      selector == :initialize && scope == :instance
+    end
   end
 end

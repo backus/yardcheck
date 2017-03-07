@@ -29,7 +29,7 @@ module Yardcheck
     memoize :param_values
 
     def return_values
-      collection(:return_value)
+      events.reject(&:initialize?).map(&:return_value).uniq
     end
     memoize :return_values
 
