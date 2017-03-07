@@ -13,8 +13,12 @@ module Yardcheck
       end
     end
 
-    def is?(klass)
-      value.is_a?(klass)
+    def is?(annotated_value)
+      if annotated_value.is_a?(Module)
+        value.is_a?(annotated_value)
+      else
+        value == annotated_value
+      end
     end
 
     def type
