@@ -43,13 +43,11 @@ module Yardcheck
     def check
       comparison = RuntimeComparison.new(documentation, observations)
 
-      comparison.invalid_params.each do |invalid_param|
-        warn invalid_param.warning
-      end
-
-      comparison.invalid_returns.each do |invalid_return|
-        warn invalid_return.warning
-      end
+      comparison
+        .violations
+        .flat_map(&:warning)
+        .uniq
+        .each(&method(:warn))
     end
   end # Runner
 end # Yardcheck

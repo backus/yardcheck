@@ -10,15 +10,15 @@ RSpec.describe Yardcheck::Runner do
     [
       Yardcheck::MethodCall.process(
         scope:    :instance,
-        method:   :add,
-        'module': TestApp::Namespace,
+        selector:   :add,
+        namespace: TestApp::Namespace,
         params:   { left: 'foo', right: 3 },
         return_value: 5
       ),
       Yardcheck::MethodCall.process(
         scope:    :class,
-        method:   :add,
-        'module': TestApp::Namespace.singleton_class,
+        selector:   :add,
+        namespace: TestApp::Namespace.singleton_class,
         params:   { left: 2, right: 3 },
         return_value: 5
       )
@@ -39,8 +39,8 @@ RSpec.describe Yardcheck::Runner do
       [
         Yardcheck::MethodCall.process(
           scope:    :instance,
-          method:   :enumerable_param,
-          'module': TestApp::Namespace,
+          selector:   :enumerable_param,
+          namespace: TestApp::Namespace,
           params:   { list: %w[foo bar] },
           return_value: nil
         )
@@ -57,8 +57,8 @@ RSpec.describe Yardcheck::Runner do
       [
         Yardcheck::MethodCall.process(
           scope:    :instance,
-          method:   :enumerable_param,
-          'module': TestApp::Namespace,
+          selector:   :enumerable_param,
+          namespace: TestApp::Namespace,
           params:   { list: 'foo' },
           return_value: nil
         )

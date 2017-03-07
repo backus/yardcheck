@@ -4,6 +4,12 @@ module Yardcheck
   class RuntimeComparison
     include Concord.new(:documentation, :spec_observation), Adamantium::Flat
 
+    def violations
+      invalid_params + invalid_returns
+    end
+
+    private
+
     def invalid_returns
       each_return do |documentation, observation, documented_return|
         observation
@@ -30,8 +36,6 @@ module Yardcheck
         end
       end.flatten
     end
-
-    private
 
     def each_param
       comparable_method_identifiers.map do |method_identifier|

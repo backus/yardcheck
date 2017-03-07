@@ -38,15 +38,15 @@ RSpec.describe Yardcheck::MethodTracer do
     expect(tracer.events).to eql([
       Yardcheck::MethodCall.process(
         scope:    :class,
-        method:   :singleton_method_example,
-        'module': Foo.singleton_class,
+        selector:   :singleton_method_example,
+        namespace: Foo.singleton_class,
         params:   { baz: 'Hello' },
         return_value: 'HELLO'
       ),
       Yardcheck::MethodCall.process(
         scope:    :instance,
-        method:   :instance_method_example,
-        'module': Foo,
+        selector:   :instance_method_example,
+        namespace: Foo,
         params:   { baz: 'Hello' },
         return_value: 'HELLO'
       )

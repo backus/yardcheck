@@ -60,9 +60,9 @@ module Yardcheck
 
     def event_details(event)
       {
-        scope:    event.defined_class.__send__(:singleton_class?) ? :class : :instance,
-        method:   event.method_id,
-        'module': event.defined_class
+        scope:     event.defined_class.__send__(:singleton_class?) ? :class : :instance,
+        selector:  event.method_id,
+        namespace: event.defined_class
       }
     end
 

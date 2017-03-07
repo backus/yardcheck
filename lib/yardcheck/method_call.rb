@@ -1,6 +1,6 @@
 module Yardcheck
   class MethodCall
-    include Anima.new(:scope, :method, :module, :params, :return_value)
+    include Anima.new(:scope, :selector, :namespace, :params, :return_value)
 
     def self.process(params:, return_value:, **attributes)
       params =
@@ -14,7 +14,7 @@ module Yardcheck
     end
 
     def method_identifier
-      [self.module, self.method, scope]
+      [namespace, selector, scope]
     end
   end
 end
