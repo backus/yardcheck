@@ -6,23 +6,27 @@ module Yardcheck
 
     def invalid_returns
       each_return do |documentation, observation, documented_return|
-        observation.to_enum(:invalid_returns, documented_return).flat_map do |observed_return|
-          Violation::Return.new(documentation, observation, observed_return)
-        end
+        observation
+          .to_enum(:invalid_returns, documented_return)
+          .flat_map do |observed_return|
+            Violation::Return.new(documentation, observation, observed_return)
+          end
       end
     end
 
     def invalid_params
       each_param do |documentation, observation, documented_params|
         documented_params.flat_map do |name, typedef|
-          observation.to_enum(:invalid_param_usage, name, typedef).flat_map do |observed_param|
-            Violation::Param.new(
-              documentation:  documentation,
-              observation:    observation,
-              param_name:     name,
-              observed_value: observed_param
-            )
-          end
+          observation
+            .to_enum(:invalid_param_usage, name, typedef)
+            .flat_map do |observed_param|
+              Violation::Param.new(
+                documentation:  documentation,
+                observation:    observation,
+                param_name:     name,
+                observed_value: observed_param
+              )
+            end
         end
       end.flatten
     end
