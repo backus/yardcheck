@@ -14,6 +14,10 @@ module Yardcheck
       end
       memoize :namespace
 
+      def param(name)
+        params.fetch(name)
+      end
+
       def params
         tags(:param).map do |param_tag|
           param_name = param_tag.name.to_sym if param_tag.name

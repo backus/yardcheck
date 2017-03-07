@@ -21,6 +21,10 @@ module Yardcheck
       value.class
     end
 
+    def inspect
+      "#{self.class}.new(#{value.inspect})"
+    end
+
     class InstanceDouble < self
       include Concord.new(:doubled_module)
 
@@ -34,6 +38,10 @@ module Yardcheck
 
       def type
         doubled_module
+      end
+
+      def inspect
+        "#{self.class}.new(#{doubled_module.inspect})"
       end
     end
 
@@ -50,6 +58,10 @@ module Yardcheck
 
       def type
         '(double)'
+      end
+
+      def inspect
+        "#{self.class}.new(#{name.inspect})"
       end
     end
   end
