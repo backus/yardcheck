@@ -19,9 +19,7 @@ module Yardcheck
     end
 
     def method_identifier
-      unique_events = events.map do |event|
-        event.fetch_values(:module, :method, :scope)
-      end.uniq
+      unique_events = events.map(&:method_identifier).uniq
 
       fail 'wtf?' unless unique_events.one?
 
@@ -29,8 +27,8 @@ module Yardcheck
     end
 
     def param_values
-      events_for(:call).map do |params:, **|
-        params.map do |key, value|
+      events_for(:call).map do |event|
+        event.params.map do |key, value|
           [key, ObservedValue.build(value)]
         end.to_h
       end
@@ -38,8 +36,8 @@ module Yardcheck
     memoize :param_values
 
     def return_values
-      events_for(:return).map do |return_value:, **|
-        ObservedValue.build(return_value)
+      events_for(:return).map do |event|
+        ObservedValue.build(event.return_value)
       end.uniq
     end
     memoize :return_values

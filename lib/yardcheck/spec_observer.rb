@@ -27,7 +27,7 @@ module Yardcheck
 
     def method_calls
       events
-        .group_by { |entry| entry.fetch_values(:module, :method, :scope) }
+        .group_by { |entry| entry.method_identifier }
         .map { |_, observations| SessionObservations.new(observations) }
     end
   end # SpecObserver
