@@ -78,6 +78,10 @@ module Yardcheck
         [documentation_source, yardoc.source].join("\n")
       end
 
+      def location_pointer
+        location.join(':')
+      end
+
       private
 
       def documentation_source
