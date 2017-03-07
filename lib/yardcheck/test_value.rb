@@ -21,6 +21,10 @@ module Yardcheck
       end
     end
 
+    def duck_type?(method_name)
+      value.respond_to?(method_name)
+    end
+
     def type
       value.class
     end
@@ -46,6 +50,10 @@ module Yardcheck
 
       def inspect
         "#{self.class}.new(#{doubled_module.inspect})"
+      end
+
+      def duck_type?(method_name)
+        doubled_module.instance_methods.include?(method_name)
       end
     end
 

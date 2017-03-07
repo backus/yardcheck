@@ -73,7 +73,11 @@ module Yardcheck
       end
 
       def match?(other)
-        other.instance_methods.include?(method_name)
+        other.duck_type?(method_name)
+      end
+
+      def signature
+        "##{method_name}"
       end
     end
   end # Typedef
