@@ -35,8 +35,8 @@ module Yardcheck
 
       FORMAT =
         "Expected #{blue('%<shorthand>s')} to return " \
-        "#{color(33, '%<signature>s')} but observed " \
-        "#{color(31, '%<observed_type>s')}"
+        "#{yellow('%<signature>s')} but observed " \
+        "#{red('%<observed_type>s')}"
 
       def explanation
         format(
@@ -63,8 +63,9 @@ module Yardcheck
       )
 
       FORMAT =
-        'Expected %<shorthand>s to receive %<signature>s ' \
-        'for %<param_name>s but observed %<observed_type>s'
+        "Expected #{blue('%<shorthand>s')} to " \
+        "receive #{yellow('%<signature>s')} for #{blue('%<param_name>s')} " \
+        "but observed #{red('%<observed_type>s')}"
 
       def explanation
         format(
