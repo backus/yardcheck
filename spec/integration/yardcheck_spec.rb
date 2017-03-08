@@ -23,7 +23,11 @@ RSpec.describe 'test app integration' do
   end
 
   def expect_report(report_substring)
-    expect(run_yardcheck).to match(a_string_including(report_substring))
+    expect(remove_color(run_yardcheck)).to match(a_string_including(report_substring))
+  end
+
+  def remove_color(string)
+    string.gsub(/\e\[(?:1\;)?\d+m/, '')
   end
 
   it 'reports expectation for instance method' do

@@ -4,6 +4,10 @@ module Yardcheck
   class RuntimeComparison
     include Concord.new(:documentation, :spec_observation), Adamantium::Flat
 
+    def warnings
+      violations.flat_map(&:warning).uniq
+    end
+
     def violations
       invalid_params + invalid_returns
     end
