@@ -9,34 +9,28 @@ module Yardcheck
       when RSpec::Mocks::Double
         Double.process(value)
       else
-        new(value)
+        new(Proxy.new(value))
       end
     end
 
     def is?(annotated_value)
       if annotated_value.is_a?(Module)
-        call(:is_a?, annotated_value)
+        value.is_a?(annotated_value)
       else
-        call(:==, annotated_value)
+        value == annotated_value
       end
     end
 
     def duck_type?(method_name)
-      call(:respond_to?, method_name)
+      value.respond_to?(method_name)
     end
 
     def type
-      call(:class)
+      value.class
     end
 
     def inspect
-      "#{type}.new(#{call(:inspect)})"
-    end
-
-    private
-
-    def call(method, *args)
-      Object.instance_method(method).bind(value).call(*args)
+      "#{self.class}.new(#{value.inspect})"
     end
 
     class InstanceDouble < self
