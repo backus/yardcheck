@@ -18,3 +18,5 @@ end
 
 gem 'guard'
 gem 'guard-rspec'
+gem 'mutest', '0.0.6'
+gem 'mutest-rspec'
