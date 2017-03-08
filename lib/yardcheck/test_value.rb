@@ -15,22 +15,28 @@ module Yardcheck
 
     def is?(annotated_value)
       if annotated_value.is_a?(Module)
-        value.is_a?(annotated_value)
+        call(:is_a?, annotated_value)
       else
-        value == annotated_value
+        call(:==, annotated_value)
       end
     end
 
     def duck_type?(method_name)
-      value.respond_to?(method_name)
+      call(:respond_to?, method_name)
     end
 
     def type
-      value.class
+      call(:class)
     end
 
     def inspect
-      "#{self.class}.new(#{value.inspect})"
+      "#{type}.new(#{call(:inspect)})"
+    end
+
+    private
+
+    def call(method, *args)
+      Object.instance_method(method).bind(value).call(*args)
     end
 
     class InstanceDouble < self

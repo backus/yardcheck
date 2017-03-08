@@ -29,12 +29,16 @@ module Yardcheck
     memoize :param_values
 
     def return_values
-      events.reject(&:initialize?).map(&:return_value).uniq
+      uniq(events.reject(&:initialize?).map(&:return_value))
     end
     memoize :return_values
 
     def collection(attribute)
-      events.map(&attribute).uniq
+      uniq(events.map(&attribute))
+    end
+
+    def uniq(collection)
+      collection.uniq { |item| Object.instance_method(:hash).bind(item).call }
     end
   end
 end # Yardcheck
