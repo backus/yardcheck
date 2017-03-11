@@ -19,6 +19,10 @@ module Yardcheck
       end
     end
 
+    def test_locations
+      collection(:example_location)
+    end
+
     def method_identifier
       collection(:method_identifier).first
     end

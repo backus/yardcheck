@@ -44,7 +44,8 @@ RSpec.describe Yardcheck::RuntimeComparison do
       <<~MSG,
       Expected TestApp::Namespace#add to receive Integer for left but observed String
 
-          (at ./test_app/lib/test_app.rb:19)
+          source: ./test_app/lib/test_app.rb:19
+          tests:  ["./spec/unit/yardcheck/runtime_comparison_spec.rb:42"]
 
           # Instance method with correct param definition and incorrect return
           #
@@ -60,7 +61,8 @@ RSpec.describe Yardcheck::RuntimeComparison do
       <<~MSG,
       Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
 
-          (at ./test_app/lib/test_app.rb:9)
+          source: ./test_app/lib/test_app.rb:9
+          tests:  ["./spec/unit/yardcheck/runtime_comparison_spec.rb:42"]
 
           # Singleton method with correct param definition and incorrect return
           #
@@ -76,7 +78,8 @@ RSpec.describe Yardcheck::RuntimeComparison do
       <<~MSG
       Expected TestApp::Namespace#add to return String but observed Fixnum
 
-          (at ./test_app/lib/test_app.rb:19)
+          source: ./test_app/lib/test_app.rb:19
+          tests:  ["./spec/unit/yardcheck/runtime_comparison_spec.rb:42"]
 
           # Instance method with correct param definition and incorrect return
           #

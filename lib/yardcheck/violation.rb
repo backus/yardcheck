@@ -7,9 +7,10 @@ module Yardcheck
       indented_source = indent(documentation.source)
       source = "\n#{CodeRay.encode(indented_source, :ruby, :terminal)}\n"
 
-      location_hint = indent(color(30, "(at #{documentation.location_pointer})"))
+      location_hint = indent(color(30, "source: #{documentation.location_pointer}"))
+      test_hint     = indent(color(30, "tests:  #{observation.test_locations}"))
 
-      "#{explanation}\n\n#{location_hint}\n#{source}\n"
+      "#{explanation}\n\n#{location_hint}\n#{test_hint}\n#{source}\n"
     end
 
     private
