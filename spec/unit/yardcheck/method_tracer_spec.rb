@@ -35,7 +35,7 @@ RSpec.describe Yardcheck::MethodTracer do
       qux.instance_method_example(str)
     end
 
-    expect(tracer.events).to eql([
+    expect(tracer.events).to eq([
       Yardcheck::MethodCall.process(
         scope:    :class,
         selector:   :singleton_method_example,
