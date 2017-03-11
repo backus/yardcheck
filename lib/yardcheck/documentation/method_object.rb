@@ -55,17 +55,6 @@ module Yardcheck
         return_type.nil?
       end
 
-      def to_h
-        {
-          method:       selector,
-          'module':     namespace,
-          scope:        scope,
-          params:       params,
-          return_value: return_type,
-          location:     location
-        }
-      end
-
       def method_identifier
         [namespace, selector, scope]
       end
