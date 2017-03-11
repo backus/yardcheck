@@ -56,13 +56,15 @@ module Yardcheck
       seen << MethodCall.process(
         call_stack.pop.merge(return_value: trace_event.return_value)
       )
+
     end
 
     def event_details(event)
       {
         scope:     event.defined_class.__send__(:singleton_class?) ? :class : :instance,
         selector:  event.method_id,
-        namespace: event.defined_class
+        namespace: event.defined_class,
+        example_location: RSpec.current_example.location
       }
     end
 

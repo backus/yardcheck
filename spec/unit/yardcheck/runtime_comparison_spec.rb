@@ -21,14 +21,16 @@ RSpec.describe Yardcheck::RuntimeComparison do
         selector:   :add,
         namespace: TestApp::Namespace,
         params:   { left: 'foo', right: 3 },
-        return_value: 5
+        return_value: 5,
+        example_location: RSpec.current_example.location
       ),
       Yardcheck::MethodCall.process(
         scope:    :class,
         selector:   :add,
         namespace: TestApp::Namespace.singleton_class,
         params:   { left: 2, right: 3 },
-        return_value: 5
+        return_value: 5,
+        example_location: RSpec.current_example.location
       )
     ]
   end
