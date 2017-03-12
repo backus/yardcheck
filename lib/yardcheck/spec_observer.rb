@@ -14,10 +14,6 @@ module Yardcheck
       new(tracer.events)
     end
 
-    def self.fake_run(*)
-      new([])
-    end
-
     def types
       method_calls
     end
