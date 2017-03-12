@@ -56,7 +56,6 @@ module Yardcheck
       seen << MethodCall.process(
         call_stack.pop.merge(return_value: trace_event.return_value)
       )
-
     end
 
     def event_details(event)

@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe Yardcheck::Runner do
-  subject(:runner) { described_class.new(fake_comparison) }
+  subject(:runner) { described_class.new(observations) }
 
-  let(:fake_comparison) do
-    instance_double(
-      Yardcheck::RuntimeComparison,
-      warnings: %w[foo bar baz]
-    )
+  let(:observations) do
+    [
+      instance_double(
+      Yardcheck::Observation, violations: [
+        instance_double(Yardcheck::Violation, warning: %w[foo]),
+        instance_double(Yardcheck::Violation, warning: %w[bar])
+      ],
+      ),
+      instance_double(
+        Yardcheck::Observation, violations: [
+          instance_double(Yardcheck::Violation, warning: %w[baz])
+        ],
+      )
+    ]
   end
 
   it 'outputs the warnings' do

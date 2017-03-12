@@ -2,7 +2,7 @@
 
 module Yardcheck
   class Runner
-    include Concord.new(:runtime_comparison)
+    include Concord.new(:observations)
 
     def self.run(args)
       options = { rspec: 'spec' }
@@ -37,17 +37,20 @@ module Yardcheck
 
       rspec = rspec.split(' ')
 
-      new(
-        RuntimeComparison.new(
-          Yardcheck::Documentation.parse,
-          Yardcheck::SpecObserver.run(rspec, namespace)
-        )
-      )
+      observations =
+        Yardcheck::SpecObserver
+          .run(rspec, namespace)
+          .associate_with(Yardcheck::Documentation.parse)
+
+      new(observations)
     end
 
     def check
-      runtime_comparison
-        .warnings
+      observations
+        .flat_map(&:violations)
+        .uniq
+        .compact
+        .map(&:warning)
         .each(&method(:warn))
     end
   end # Runner

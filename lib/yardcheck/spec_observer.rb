@@ -14,17 +14,15 @@ module Yardcheck
       new(tracer.events)
     end
 
-    def types
-      method_calls
-    end
-    memoize :types
+    def associate_with(documentation)
+      docs    = documentation.method_objects.group_by(&:method_identifier)
+      calls   = events.group_by(&:method_identifier)
+      overlap = docs.keys & calls.keys
 
-    private
-
-    def method_calls
-      events
-        .group_by { |entry| entry.method_identifier }
-        .map { |_, observations| SessionObservations.new(observations) }
+      overlap.flat_map do |key|
+        method_object = docs.fetch(key).first
+        calls.fetch(key).map { |call| Observation.new(method_object, call) }
+      end
     end
   end # SpecObserver
 end # Yardcheck

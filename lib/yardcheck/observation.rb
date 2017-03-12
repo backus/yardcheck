@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+module Yardcheck
+  class Observation
+    include Concord.new(:documentation, :event)
+
+    def violations
+      param_violations + return_violations
+    end
+
+    def source_code
+      documentation.source
+    end
+
+    def source_location
+      documentation.location_pointer
+    end
+
+    def test_location
+      event.example_location
+    end
+
+    def method_shorthand
+      documentation.shorthand
+    end
+
+    def documented_param(name)
+      documentation.params.fetch(name)
+    end
+
+    def observed_param(name)
+      event.params.fetch(name)
+    end
+
+    def documented_return_type
+      documentation.return_type
+    end
+
+    def actual_return_type
+      event.return_value.type
+    end
+
+    private
+
+    def param_violations
+      overlapping_keys = documentation.params.keys & event.params.keys
+
+      overlapping_keys.map do |key|
+        type_definition = documentation.params.fetch(key)
+        test_value      = event.params.fetch(key)
+
+        Violation::Param.new(key, self) unless type_definition.match?(test_value)
+      end
+    end
+
+    def return_violations
+      invalid_return_type? ? [Violation::Return.new(self)] : []
+    end
+
+    def invalid_return_type?
+      documentation.return_type && !documentation.return_type.match?(event.return_value)
+    end
+  end
+end
