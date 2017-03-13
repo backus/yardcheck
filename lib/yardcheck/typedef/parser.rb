@@ -34,6 +34,8 @@ module Yardcheck
       def resolve_type(name)
         case name
         when 'nil' then [NilClass]
+        when 'true' then [TrueClass]
+        when 'false' then [FalseClass]
         when 'self' then [namespace_constant]
         when 'undefined' then :undefined
         when 'Boolean', 'Bool' then [TrueClass, FalseClass]
