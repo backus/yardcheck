@@ -37,7 +37,7 @@ module Yardcheck
         when 'true' then [TrueClass]
         when 'false' then [FalseClass]
         when 'self' then [namespace_constant]
-        when 'undefined' then :undefined
+        when 'undefined', 'void' then :undefined
         when 'Boolean', 'Bool' then [TrueClass, FalseClass]
         when Ducktype::PATTERN then :ducktype
         else [tag_const(name)]

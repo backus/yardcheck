@@ -40,8 +40,8 @@ module Yardcheck
         new(value.instance_variable_get(:@doubled_module).target)
       end
 
-      def is?(klass)
-        doubled_module == klass || doubled_module < klass
+      def is?(value)
+        doubled_module == value || (value.is_a?(Module) && doubled_module < value)
       end
 
       def type

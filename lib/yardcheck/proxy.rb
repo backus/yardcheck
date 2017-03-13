@@ -25,7 +25,7 @@ module Yardcheck
       ::Object
         .instance_method(:respond_to?)
         .bind(@target)
-        .call(method_name)
+        .call(method_name, true)
     end
   end
 end
