@@ -77,7 +77,7 @@ module Yardcheck
       end
 
       def signature
-        "##{method_name}"
+        "an object responding to ##{method_name}"
       end
     end
   end # Typedef
