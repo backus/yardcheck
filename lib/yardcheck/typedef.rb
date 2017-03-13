@@ -20,7 +20,7 @@ module Yardcheck
     end
 
     def signature
-      types.to_a.map { |type| type.signature }.join(' | ')
+      types.to_a.map(&:signature).join(' | ')
     end
 
     def +(other)
@@ -37,7 +37,7 @@ module Yardcheck
       def signature
         type_class.inspect
       end
-    end
+    end # Literal
 
     class Collection < self
       include Concord.new(:collection_class, :member_typedefs)
@@ -49,7 +49,7 @@ module Yardcheck
       def signature
         "#{collection_class}<#{member_typedefs.map(&:signature)}>"
       end
-    end
+    end # Collection
 
     class Undefined < self
       include Concord.new
@@ -79,6 +79,6 @@ module Yardcheck
       def signature
         "an object responding to ##{method_name}"
       end
-    end
+    end # Ducktype
   end # Typedef
 end # Yardcheck

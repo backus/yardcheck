@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   module Color
     private
@@ -21,5 +23,5 @@ module Yardcheck
     def grey(text)
       color(30, text)
     end
-  end
-end
+  end # Color
+end # Yardcheck

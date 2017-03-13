@@ -13,7 +13,7 @@ RSpec.describe Yardcheck::MethodTracer do
       def instance_method_example(baz)
         Foo.singleton_method_example(baz)
       end
-    end
+    end # Foo
 
     class Qux
       def self.singleton_method_example(baz)
@@ -23,7 +23,7 @@ RSpec.describe Yardcheck::MethodTracer do
       def instance_method_example(baz)
         Qux.singleton_method_example(baz)
       end
-    end
+    end # Qux
 
     tracer = described_class.new(Foo)
     foo    = Foo.new # Capture the activity for this object
@@ -37,20 +37,20 @@ RSpec.describe Yardcheck::MethodTracer do
 
     expect(tracer.events).to eq([
       Yardcheck::MethodCall.process(
-        scope:    :class,
-        selector:   :singleton_method_example,
-        namespace: Foo.singleton_class,
-        params:   { baz: 'Hello' },
-        return_value: 'HELLO',
+        scope:            :class,
+        selector:         :singleton_method_example,
+        namespace:        Foo.singleton_class,
+        params:           { baz: 'Hello' },
+        return_value:     'HELLO',
         example_location: RSpec.current_example.location,
         error_raised:     false
       ),
       Yardcheck::MethodCall.process(
-        scope:    :instance,
-        selector:   :instance_method_example,
-        namespace: Foo,
-        params:   { baz: 'Hello' },
-        return_value: 'HELLO',
+        scope:            :instance,
+        selector:         :instance_method_example,
+        namespace:        Foo,
+        params:           { baz: 'Hello' },
+        return_value:     'HELLO',
         example_location: RSpec.current_example.location,
         error_raised:     false
       )

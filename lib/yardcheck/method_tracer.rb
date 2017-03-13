@@ -31,7 +31,7 @@ module Yardcheck
       case trace_event.event
       when :call   then process_call(trace_event)
       when :return then process_return(trace_event)
-      when :raise  then process_raise(trace_event)
+      when :raise  then process_raise
       end
     end
 
@@ -59,15 +59,15 @@ module Yardcheck
       )
     end
 
-    def process_raise(trace_event)
+    def process_raise
       call_stack.last[:error_raised] = true
     end
 
     def event_details(event)
       {
-        scope:     event.defined_class.__send__(:singleton_class?) ? :class : :instance,
-        selector:  event.method_id,
-        namespace: event.defined_class,
+        scope:            event.defined_class.__send__(:singleton_class?) ? :class : :instance,
+        selector:         event.method_id,
+        namespace:        event.defined_class,
         example_location: RSpec.current_example.location,
         error_raised:     false
       }
@@ -82,5 +82,5 @@ module Yardcheck
         klass.name && klass.name.start_with?(namespace.name)
       end
     end
-  end
-end
+  end # MethodTracer
+end # Yardcheck

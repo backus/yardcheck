@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Violation
     extend Color
@@ -75,8 +77,8 @@ module Yardcheck
       def explanation
         format(
           FORMAT,
-          shorthand: shorthand,
-          signature: signature,
+          shorthand:     shorthand,
+          signature:     signature,
           observed_type: observed_type
         )
       end
@@ -96,7 +98,7 @@ module Yardcheck
       def expected_type
         observation.documented_return_type
       end
-    end
+    end # Return
 
     class Param < self
       include Equalizer.new(:name, :observation)
@@ -115,15 +117,11 @@ module Yardcheck
       def explanation
         format(
           FORMAT,
-          shorthand: shorthand,
-          signature: signature,
-          name: name,
+          shorthand:  shorthand,
+          signature:  signature,
+          name:       name,
           test_value: observed_type
         )
-      end
-
-      def combine_with?(other)
-        %i[shorthand signature observed_type]
       end
 
       private
@@ -153,6 +151,6 @@ module Yardcheck
       def expected_type
         observation.documented_param(name)
       end
-    end
-  end
+    end # Param
+  end # Violation
 end # Yardcheck

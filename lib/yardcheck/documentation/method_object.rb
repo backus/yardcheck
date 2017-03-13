@@ -80,7 +80,7 @@ module Yardcheck
           documentation_start -= 1
         end
 
-        file_source[(documentation_start)..(documentation_end - 1)].join("\n")
+        file_source[documentation_start..(documentation_end - 1)].join("\n")
       end
 
       def source_starting_line

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Proxy < BasicObject
     def initialize(target)
@@ -27,5 +29,5 @@ module Yardcheck
         .bind(@target)
         .call(method_name, true)
     end
-  end
-end
+  end # Proxy
+end # Yardcheck

@@ -21,7 +21,9 @@ module Yardcheck
 
     def types
       method_objects.reject do |method_object|
-        method_object.unknown_param? || method_object.unknown_module? || method_object.unknown_return_value?
+        method_object.unknown_param? ||
+          method_object.unknown_module? ||
+          method_object.unknown_return_value?
       end
     end
     memoize :types

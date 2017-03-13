@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class MethodCall
     include Anima.new(
@@ -32,5 +34,5 @@ module Yardcheck
     def raised?
       error_raised
     end
-  end
-end
+  end # MethodCall
+end # Yardcheck

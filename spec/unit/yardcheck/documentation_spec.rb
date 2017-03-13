@@ -91,7 +91,7 @@ RSpec.describe Yardcheck::Documentation do
       .to eql(
         Yardcheck::Typedef.new([
           Yardcheck::Typedef::Literal.new(String),
-          Yardcheck::Typedef::Literal.new(NilClass),
+          Yardcheck::Typedef::Literal.new(NilClass)
         ])
       )
   end

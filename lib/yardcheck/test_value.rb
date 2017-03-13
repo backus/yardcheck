@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class TestValue
     include Concord.new(:value)
@@ -55,7 +57,7 @@ module Yardcheck
       def duck_type?(method_name)
         doubled_module.instance_methods.include?(method_name)
       end
-    end
+    end # InstanceDouble
 
     class Double < self
       include Concord.new(:name)
@@ -75,6 +77,6 @@ module Yardcheck
       def inspect
         "#{self.class}.new(#{name.inspect})"
       end
-    end
-  end
-end
+    end # Double
+  end # TestValue
+end # Yardcheck

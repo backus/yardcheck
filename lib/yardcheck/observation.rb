@@ -49,7 +49,8 @@ module Yardcheck
         type_definition = documentation.params.fetch(key)
         test_value      = event.params.fetch(key)
 
-        Violation::Param.new(key, self) unless type_definition.match?(test_value)
+        next if type_definition.match?(test_value)
+        Violation::Param.new(key, self)
       end
     end
 
@@ -63,5 +64,5 @@ module Yardcheck
         !event.raised? &&
         !event.initialize?
     end
-  end
-end
+  end # Observation
+end # Yardcheck

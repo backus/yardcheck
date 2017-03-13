@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class Typedef
     class Parser
@@ -83,6 +85,6 @@ module Yardcheck
         receiver.const_get(name)
       rescue NameError
       end
-    end
-  end
-end
+    end # Parser
+  end # Typedef
+end # Yardcheck

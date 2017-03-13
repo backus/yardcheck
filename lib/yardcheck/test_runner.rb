@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yardcheck
   class TestRunner
     include Concord.new(:arguments)
@@ -21,5 +23,5 @@ module Yardcheck
         runner.setup($stderr, $stdout)
       end
     end
-  end
-end
+  end # TestRunner
+end # Yardcheck

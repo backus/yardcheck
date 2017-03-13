@@ -20,20 +20,20 @@ RSpec.describe Yardcheck::Runner do
   let(:observed_events) do
     [
       Yardcheck::MethodCall.process(
-        scope:    :instance,
-        selector:   :add,
-        namespace: TestApp::Namespace,
-        params:   { left: 'foo', right: 3 },
-        return_value: 5,
+        scope:            :instance,
+        selector:         :add,
+        namespace:        TestApp::Namespace,
+        params:           { left: 'foo', right: 3 },
+        return_value:     5,
         example_location: 'test_app_spec.rb:1',
         error_raised:     false
       ),
       Yardcheck::MethodCall.process(
-        scope:    :class,
-        selector:   :add,
-        namespace: TestApp::Namespace.singleton_class,
-        params:   { left: 2, right: 3 },
-        return_value: 5,
+        scope:            :class,
+        selector:         :add,
+        namespace:        TestApp::Namespace.singleton_class,
+        params:           { left: 2, right: 3 },
+        return_value:     5,
         example_location: 'test_app_spec.rb:2',
         error_raised:     false
       )
@@ -111,29 +111,29 @@ RSpec.describe Yardcheck::Runner do
     let(:observed_events) do
       [
         Yardcheck::MethodCall.process(
-          scope:    :instance,
-          selector:   :add,
-          namespace: TestApp::Namespace,
-          params:   { left: 'foo', right: 3 },
-          return_value: 'valid return type',
+          scope:            :instance,
+          selector:         :add,
+          namespace:        TestApp::Namespace,
+          params:           { left: 'foo', right: 3 },
+          return_value:     'valid return type',
           example_location: 'test_app_spec.rb:1',
           error_raised:     false
         ),
         Yardcheck::MethodCall.process(
-          scope:    :instance,
-          selector:   :add,
-          namespace: TestApp::Namespace,
-          params:   { left: 'foo', right: 3 },
-          return_value: 'valid return type',
+          scope:            :instance,
+          selector:         :add,
+          namespace:        TestApp::Namespace,
+          params:           { left: 'foo', right: 3 },
+          return_value:     'valid return type',
           example_location: 'test_app_spec.rb:2',
           error_raised:     false
         ),
         Yardcheck::MethodCall.process(
-          scope:    :instance,
-          selector:   :add,
-          namespace: TestApp::Namespace,
-          params:   { left: 1, right: 'now this one is wrong' },
-          return_value: 'valid return type',
+          scope:            :instance,
+          selector:         :add,
+          namespace:        TestApp::Namespace,
+          params:           { left: 1, right: 'now this one is wrong' },
+          return_value:     'valid return type',
           example_location: 'test_app_spec.rb:3',
           error_raised:     false
         )

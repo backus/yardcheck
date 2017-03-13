@@ -54,8 +54,6 @@ module Yardcheck
     private
 
     def combined_violations
-      combined = []
-
       violations.group_by(&:combination_identifier).flat_map do |_, grouped_violations|
         grouped_violations.reduce(:combine)
       end
