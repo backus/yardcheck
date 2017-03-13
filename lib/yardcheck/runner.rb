@@ -2,7 +2,7 @@
 
 module Yardcheck
   class Runner
-    include Concord.new(:observations)
+    include Concord.new(:observations, :output)
 
     def self.run(args)
       options = { rspec: 'spec' }
@@ -42,7 +42,7 @@ module Yardcheck
           .run(rspec, namespace)
           .associate_with(Yardcheck::Documentation.parse)
 
-      new(observations)
+      new(observations, $stderr)
     end
 
     def check
@@ -52,6 +52,12 @@ module Yardcheck
         .compact
         .map(&:warning)
         .each(&method(:warn))
+    end
+
+    private
+
+    def warn(message)
+      output.puts(message)
     end
   end # Runner
 end # Yardcheck
