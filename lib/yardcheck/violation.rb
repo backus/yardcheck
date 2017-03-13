@@ -5,7 +5,7 @@ module Yardcheck
 
     def initialize(observation, test_locations = [observation.test_location])
       @observation    = observation
-      @test_locations = test_locations
+      @test_locations = test_locations.sort.uniq
     end
 
     def warning
