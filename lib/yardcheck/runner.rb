@@ -2,7 +2,7 @@
 
 module Yardcheck
   class Runner
-    include Concord.new(:observations, :output)
+    include Concord.new(:observations, :output), Memoizable
 
     def self.run(args)
       options = { rspec: 'spec' }
@@ -46,15 +46,28 @@ module Yardcheck
     end
 
     def check
-      observations
-        .flat_map(&:violations)
-        .uniq
-        .compact
+      combined_violations
         .map(&:warning)
         .each(&method(:warn))
     end
 
     private
+
+    def combined_violations
+      combined = []
+
+      violations.group_by(&:combination_identifier).flat_map do |_, grouped_violations|
+        grouped_violations.reduce(:combine)
+      end
+    end
+
+    def violations
+      observations
+        .flat_map(&:violations)
+        .uniq
+        .compact
+    end
+    memoize :violations
 
     def warn(message)
       output.puts(message)
