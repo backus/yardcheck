@@ -34,4 +34,8 @@ RSpec.describe TestApp::Namespace do
   it 'improperly tests a method with an instance double' do
     expect(TestApp::Namespace.new.improperly_tested_with_instance_double(instance_double(Integer))).to be(nil)
   end
+
+  it 'tests a method that raises an error instead of returning' do
+    expect { TestApp::Namespace.new.always_raise }.to raise_error(TestApp::Namespace::AppError)
+  end
 end

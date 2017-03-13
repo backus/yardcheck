@@ -58,7 +58,10 @@ module Yardcheck
     end
 
     def invalid_return_type?
-      documentation.return_type && !documentation.return_type.match?(event.return_value)
+      documentation.return_type &&
+        !documentation.return_type.match?(event.return_value) &&
+        !event.raised? &&
+        !event.initialize?
     end
   end
 end

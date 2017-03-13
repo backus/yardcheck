@@ -6,7 +6,8 @@ module Yardcheck
       :namespace,
       :params,
       :example_location,
-      :return_value
+      :return_value,
+      :error_raised
     )
 
     def self.process(params:, return_value:, **attributes)
@@ -26,6 +27,10 @@ module Yardcheck
 
     def initialize?
       selector == :initialize && scope == :instance
+    end
+
+    def raised?
+      error_raised
     end
   end
 end

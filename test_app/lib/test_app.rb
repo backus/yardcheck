@@ -96,6 +96,15 @@ module TestApp
     def improperly_tested_with_instance_double(value)
     end
 
+    AppError = Class.new(StandardError)
+
+    # @return [Fixnum]
+    def always_raise
+      raise AppError
+
+      1
+    end
+
     class Parent
     end
 
