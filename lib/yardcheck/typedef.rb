@@ -28,7 +28,7 @@ module Yardcheck
     end
 
     class Literal < self
-      include Concord.new(:type_class)
+      include Concord.new(:const)
 
       def match?(value)
         value.is?(type_class)
@@ -37,17 +37,25 @@ module Yardcheck
       def signature
         type_class.inspect
       end
+
+      def type_class
+        const.constant
+      end
     end # Literal
 
     class Collection < self
-      include Concord.new(:collection_class, :member_typedefs)
+      include Concord.new(:collection_const, :member_typedefs)
 
       def match?(other)
-        Literal.new(collection_class).match?(other)
+        Literal.new(collection_const).match?(other)
       end
 
       def signature
         "#{collection_class}<#{member_typedefs.map(&:signature)}>"
+      end
+
+      def collection_class
+        collection_const.constant
       end
     end # Collection
 

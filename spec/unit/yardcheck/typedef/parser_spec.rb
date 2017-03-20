@@ -7,20 +7,20 @@ RSpec.describe Yardcheck::Typedef::Parser do
 
   it 'resolves one normal constant' do
     expect(parse('Integer')).to eql(Yardcheck::Typedef.new([
-      Yardcheck::Typedef::Literal.new(Integer)
+      Yardcheck::Typedef::Literal.new(Yardcheck::Const.new(Integer))
     ]))
   end
 
   it 'resolves multiple constants' do
     expect(parse('Integer', 'String')).to eql(Yardcheck::Typedef.new([
-      Yardcheck::Typedef::Literal.new(Integer),
-      Yardcheck::Typedef::Literal.new(String)
+      Yardcheck::Typedef::Literal.new(Yardcheck::Const.new(Integer)),
+      Yardcheck::Typedef::Literal.new(Yardcheck::Const.new(String))
     ]))
   end
 
   it 'resolves child of namespace' do
     expect(parse('Child')).to eql(Yardcheck::Typedef.new([
-      Yardcheck::Typedef::Literal.new(TestApp::Namespace::Child)
+      Yardcheck::Typedef::Literal.new(Yardcheck::Const.new(TestApp::Namespace::Child))
     ]))
   end
 
@@ -28,8 +28,8 @@ RSpec.describe Yardcheck::Typedef::Parser do
     expect(parse('Array<String>')).to eql(
       Yardcheck::Typedef.new([
         Yardcheck::Typedef::Collection.new(
-          Array,
-          [Yardcheck::Typedef::Literal.new(String)]
+          Yardcheck::Const.new(Array),
+          [Yardcheck::Typedef::Literal.new(Yardcheck::Const.new(String))]
         )
       ])
     )

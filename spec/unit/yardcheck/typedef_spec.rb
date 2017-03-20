@@ -2,7 +2,11 @@
 
 RSpec.describe Yardcheck::Typedef do
   def typedef(*types)
-    described_class.new(types.map { |type| described_class::Literal.new(type) })
+    typedefs = types.map do |type|
+      described_class::Literal.new(Yardcheck::Const.new(type))
+    end
+
+    described_class.new(typedefs)
   end
 
   it 'matches exact type matches' do

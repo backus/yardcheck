@@ -103,7 +103,7 @@ module Yardcheck
       end
 
       def unscoped_namespace
-        const(qualified_namespace)
+        Const.resolve(qualified_namespace).constant
       end
       memoize :unscoped_namespace
 
@@ -113,15 +113,6 @@ module Yardcheck
 
       def tags(type)
         yardoc.tags(type)
-      end
-
-      def const(name)
-        resolve(Object, name)
-      end
-
-      def resolve(receiver, name)
-        receiver.const_get(name)
-      rescue NameError
       end
     end # MethodObject
   end # Documentation

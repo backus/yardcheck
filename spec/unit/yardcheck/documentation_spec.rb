@@ -23,21 +23,25 @@ RSpec.describe Yardcheck::Documentation do
     Yardcheck::Typedef.new(members)
   end
 
+  def const(constant)
+    Yardcheck::Const.new(constant)
+  end
+
   let(:namespace_add) { method_object('TestApp::Namespace#add') }
 
   it 'resolves constant' do
-    expect(namespace_add.namespace).to be(TestApp::Namespace)
+    expect(namespace_add.namespace).to eql(TestApp::Namespace)
   end
 
   it 'resolves parameters' do
     expect(namespace_add.params).to eql(
-      left:  typedef(literal(Integer)),
-      right: typedef(literal(Integer))
+      left:  typedef(literal(const(Integer))),
+      right: typedef(literal(const(Integer)))
     )
   end
 
   it 'resolves return value' do
-    expect(namespace_add.return_type).to eql(typedef(literal(String)))
+    expect(namespace_add.return_type).to eql(typedef(literal(const(String))))
   end
 
   it 'labels instance scope' do
@@ -55,12 +59,12 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'handles returns with a literal nil' do
     expect(method_object('TestApp::Namespace#return_nil').return_type)
-      .to eql(typedef(literal(NilClass)))
+      .to eql(typedef(literal(const(NilClass))))
   end
 
   it 'handles methods that return instance of the class' do
     expect(method_object('TestApp::Namespace#return_self').return_type)
-      .to eql(typedef(literal(TestApp::Namespace)))
+      .to eql(typedef(literal(const(TestApp::Namespace))))
   end
 
   it 'supports [undefined]' do
@@ -70,20 +74,27 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'supports [Boolean]' do
     expect(method_object('TestApp::Namespace#bool_return').return_type)
-      .to eql(typedef(literal(TrueClass), literal(FalseClass)))
+      .to eql(typedef(literal(const(TrueClass)), literal(const(FalseClass))))
   end
 
   it 'supports [Array<String>]' do
-    expect(method_object('TestApp::Namespace#array_return').return_type)
-      .to eql(typedef(Yardcheck::Typedef::Collection.new(Array, [literal(String)])))
+    expect(method_object('TestApp::Namespace#array_return').return_type).to eql(
+      typedef(Yardcheck::Typedef::Collection.new(const(Array), [literal(const(String))]))
+    )
   end
 
   it 'supports multiple @return' do
     expect(method_object('TestApp::Namespace#multiple_returns').return_type)
-      .to eql(typedef(literal(String), literal(NilClass)))
+      .to eql(typedef(literal(const(String)), literal(const(NilClass))))
   end
 
   it 'ignores documented params without names' do
     expect(method_object('TestApp::Namespace#param_without_name').params).to eql({})
+  end
+
+  it 'ignores invalid constant resolve' do
+    expect(method_object('TestApp::Namespace#ignoring_invalid_types').params).to eql({
+      foo: typedef(literal(Yardcheck::Const::Invalid.new(TestApp::Namespace, 'What')))
+    })
   end
 end

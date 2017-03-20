@@ -35,56 +35,29 @@ module Yardcheck
 
       def resolve_type(name)
         case name
-        when 'nil' then [NilClass]
-        when 'true' then [TrueClass]
-        when 'false' then [FalseClass]
-        when 'self' then [namespace_constant]
+        when 'nil' then   [Const.new(NilClass)]
+        when 'true' then  [Const.new(TrueClass)]
+        when 'false' then [Const.new(FalseClass)]
+        when 'self' then [namespace_const]
         when 'undefined', 'void' then :undefined
-        when 'Boolean', 'Bool' then [TrueClass, FalseClass]
+        when 'Boolean', 'Bool' then [Const.new(TrueClass), Const.new(FalseClass)]
         when Ducktype::PATTERN then :ducktype
         else [tag_const(name)]
         end
       end
 
       def tag_const(name)
-        if namespace.end_with?(name)
-          namespace_constant
-        else
-          from_root = const(name)
-          from_root ? from_root : resolve_via_nesting(name)
-        end
+        Const.resolve(name, namespace_constant)
       end
 
-      def resolve_via_nesting(name)
-        nesting.each do |constant_scope|
-          resolution = resolve(constant_scope, name)
-          return resolution if resolution
-        end
-
-        nil
+      def namespace_const
+        Const.resolve(namespace)
       end
-
-      def nesting
-        namespace.split('::').reduce([]) do |namespaces, name|
-          parent = namespaces.last || Object
-          namespaces + [resolve(parent, name)]
-        end.compact.reverse
-      end
-      memoize :nesting
 
       def namespace_constant
-        const(namespace)
+        namespace_const.constant
       end
       memoize :namespace_constant
-
-      def const(name)
-        resolve(Object, name)
-      end
-
-      def resolve(receiver, name)
-        receiver.const_get(name)
-      rescue NameError
-      end
     end # Parser
   end # Typedef
 end # Yardcheck
