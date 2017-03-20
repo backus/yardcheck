@@ -10,7 +10,7 @@ module Yardcheck
       @test_locations = test_locations.sort.uniq
     end
 
-    def warning
+    def offense
       indented_source = indent(observation.source_code)
       source = "\n#{CodeRay.encode(indented_source, :ruby, :terminal)}\n"
 

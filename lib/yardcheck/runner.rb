@@ -46,9 +46,7 @@ module Yardcheck
     end
 
     def check
-      combined_violations
-        .map(&:warning)
-        .each(&method(:warn))
+      combined_violations.map(&:offense).each(&method(:warn))
     end
 
     private
