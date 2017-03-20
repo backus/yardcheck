@@ -40,6 +40,6 @@ RSpec.describe TestApp::Namespace do
   end
 
   it 'improperly documents the param with an invalid const' do
-    expect(TestApp::Namespace.new.ignoring_invalid_types('hi')).to eq([1])
+    expect(TestApp::Namespace.new.ignoring_invalid_types('hi')).to be(nil)
   end
 end

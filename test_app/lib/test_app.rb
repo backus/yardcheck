@@ -33,9 +33,8 @@ module TestApp
 
     # @param foo [What]
     #
-    # @return [Array<Integer>]
+    # @return [Wow]
     def ignoring_invalid_types(foo)
-      [1]
     end
 
     # @return [TestApp::Namespace::Parent]

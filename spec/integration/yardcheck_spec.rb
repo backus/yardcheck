@@ -34,6 +34,7 @@ RSpec.describe 'test app integration' do
 
   it 'generates a warning for invalid constant' do
     expect_report('WARNING: Unabled to resolve "What" for lib/test_app.rb:37')
+    expect_report('WARNING: Unabled to resolve "Wow" for lib/test_app.rb:37')
   end
 
   it 'reports expectations' do
@@ -42,7 +43,7 @@ RSpec.describe 'test app integration' do
       expect_report('Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum')
       expect_report('Expected TestApp::Namespace#documents_relative to return TestApp::Namespace::Child but observed String')
       expect_report('Expected TestApp::Namespace#improperly_tested_with_instance_double to receive String for value but observed Integer')
-      matches = run_yardcheck.scan(/^Expected .+ to return .+ but observed .+$/)
+      matches = report.scan(/^Expected .+ to return .+ but observed .+$/)
       expect(matches.size).to be(3)
     end
   end

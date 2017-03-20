@@ -24,9 +24,7 @@ module Yardcheck
       memoize :params
 
       def return_type
-        return if tags(:return).empty?
-
-        tags(:return).map(&method(:typedefs)).reduce(:+)
+        return_typedef unless return_typedef&.invalid_const?
       end
 
       def singleton?
@@ -71,12 +69,21 @@ module Yardcheck
 
       def warnings
         param_warnings = param_typedefs.select { |_, typedef| typedef.invalid_const? }.values
-        return_warning = return_type&.invalid_const? ? [return_type] : []
+        return_warning = return_typedef&.invalid_const? ? [return_typedef] : []
 
         [*param_warnings, *return_warning].map { |warning| Warning.new(self, warning) }
       end
 
       private
+
+      def return_typedef
+        return_tag.map(&method(:typedefs)).reduce(:+) unless return_tag.empty?
+      end
+      memoize :return_typedef
+
+      def return_tag
+        tags(:return)
+      end
 
       def param_typedefs
         tags(:param).map do |param_tag|

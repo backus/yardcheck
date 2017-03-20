@@ -81,6 +81,10 @@ module Yardcheck
       def signature
         'Undefined'
       end
+
+      def invalid_const?
+        false
+      end
     end # Undefined
 
     class Ducktype < self
@@ -98,6 +102,10 @@ module Yardcheck
 
       def signature
         "an object responding to ##{method_name}"
+      end
+
+      def invalid_const?
+        false
       end
     end # Ducktype
   end # Typedef
