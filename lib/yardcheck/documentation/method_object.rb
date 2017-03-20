@@ -19,11 +19,9 @@ module Yardcheck
       end
 
       def params
-        tags(:param).map do |param_tag|
-          param_name = param_tag.name.to_sym if param_tag.name
-          [param_name, typedefs(param_tag)]
-        end.select { |key, _| key }.to_h
+        param_typedefs.select { |key, value| key && !value.invalid_const? }.to_h
       end
+      memoize :params
 
       def return_type
         return if tags(:return).empty?
@@ -71,7 +69,22 @@ module Yardcheck
         location.join(':')
       end
 
+      def warnings
+        param_warnings = param_typedefs.select { |_, typedef| typedef.invalid_const? }.values
+        return_warning = return_type&.invalid_const? ? [return_type] : []
+
+        [*param_warnings, *return_warning].map { |warning| Warning.new(self, warning) }
+      end
+
       private
+
+      def param_typedefs
+        tags(:param).map do |param_tag|
+          param_name = param_tag.name.to_sym if param_tag.name
+          [param_name, typedefs(param_tag)]
+        end.to_h
+      end
+      memoize :param_typedefs
 
       def documentation_source
         documentation_start = documentation_end = source_starting_line - 1

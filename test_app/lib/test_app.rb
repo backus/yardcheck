@@ -35,6 +35,7 @@ module TestApp
     #
     # @return [Array<Integer>]
     def ignoring_invalid_types(foo)
+      [1]
     end
 
     # @return [TestApp::Namespace::Parent]

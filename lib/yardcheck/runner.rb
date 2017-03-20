@@ -46,16 +46,32 @@ module Yardcheck
     end
 
     def check
-      combined_violations.map(&:offense).each(&method(:warn))
+      warn_all(warnings)
+      warn_all(offenses)
     end
 
     private
+
+    def warnings
+      observations
+        .flat_map(&:documentation_warnings)
+        .map(&:message)
+    end
+
+    def offenses
+      combined_violations.map(&:offense)
+    end
+
+    def warn_all(output_lines)
+      output_lines.map(&method(:warn))
+    end
 
     def combined_violations
       violations.group_by(&:combination_identifier).flat_map do |_, grouped_violations|
         grouped_violations.reduce(:combine)
       end
     end
+    memoize :combined_violations
 
     def violations
       observations

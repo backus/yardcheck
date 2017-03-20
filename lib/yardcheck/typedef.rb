@@ -27,6 +27,10 @@ module Yardcheck
       self.class.new((types + other.types).uniq)
     end
 
+    def invalid_const?
+      types.any?(&:invalid_const?)
+    end
+
     class Literal < self
       include Concord.new(:const)
 
@@ -40,6 +44,10 @@ module Yardcheck
 
       def type_class
         const.constant
+      end
+
+      def invalid_const?
+        !const.valid?
       end
     end # Literal
 
@@ -56,6 +64,10 @@ module Yardcheck
 
       def collection_class
         collection_const.constant
+      end
+
+      def invalid_const?
+        !collection_const.valid? || member_typedefs.any?(&:invalid_const?)
       end
     end # Collection
 

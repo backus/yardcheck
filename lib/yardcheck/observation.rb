@@ -40,6 +40,10 @@ module Yardcheck
       event.return_value.type
     end
 
+    def documentation_warnings
+      documentation.warnings
+    end
+
     private
 
     def param_violations

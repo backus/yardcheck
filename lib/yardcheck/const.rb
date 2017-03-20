@@ -29,6 +29,8 @@ module Yardcheck
     class Invalid < self
       include Concord.new(:scope, :constant)
 
+      public :constant
+
       def valid?
         false
       end

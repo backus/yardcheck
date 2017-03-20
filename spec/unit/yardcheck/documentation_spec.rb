@@ -93,8 +93,6 @@ RSpec.describe Yardcheck::Documentation do
   end
 
   it 'ignores invalid constant resolve' do
-    expect(method_object('TestApp::Namespace#ignoring_invalid_types').params).to eql({
-      foo: typedef(literal(Yardcheck::Const::Invalid.new(TestApp::Namespace, 'What')))
-    })
+    expect(method_object('TestApp::Namespace#ignoring_invalid_types').params).to be_empty
   end
 end

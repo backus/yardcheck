@@ -38,4 +38,8 @@ RSpec.describe TestApp::Namespace do
   it 'tests a method that raises an error instead of returning' do
     expect { TestApp::Namespace.new.always_raise }.to raise_error(TestApp::Namespace::AppError)
   end
+
+  it 'improperly documents the param with an invalid const' do
+    expect(TestApp::Namespace.new.ignoring_invalid_types('hi')).to eq([1])
+  end
 end

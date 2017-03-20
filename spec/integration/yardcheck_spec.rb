@@ -30,6 +30,10 @@ RSpec.describe 'test app integration' do
     string.gsub(/\e\[(?:1\;)?\d+m/, '')
   end
 
+  it 'generates a warning for invalid constant' do
+    expect_report('WARNING: Unabled to resolve "What" for lib/test_app.rb:37')
+  end
+
   it 'reports expectation for instance method' do
     expect_report('Expected TestApp::Namespace#add to return String but observed Fixnum')
   end
