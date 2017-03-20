@@ -19,28 +19,8 @@ module Yardcheck
       new(YARD::Registry.all(:method))
     end
 
-    def types
-      method_objects.reject do |method_object|
-        method_object.unknown_param? ||
-          method_object.unknown_module? ||
-          method_object.unknown_return_value?
-      end
-    end
-    memoize :types
-
     def method_objects
       yardocs.map { |yardoc| MethodObject.new(yardoc) }
-    end
-
-    private
-
-    def const(name)
-      return if name.nil?
-
-      begin
-        Object.const_get(name)
-      rescue NameError
-      end
     end
   end # Documentation
 end # Yardcheck
