@@ -82,27 +82,15 @@ module Yardcheck
       memoize :param_typedefs
 
       def documentation_source
-        documentation_start = documentation_end = source_starting_line - 1
-
-        until documentation_start == 0 || source_line_at(documentation_start) !~ /^\s*#/
-          documentation_start -= 1
-        end
-
-        file_source[documentation_start..(documentation_end - 1)].join("\n")
+        file_source.documentation_above(source_starting_line)
       end
 
       def source_starting_line
         location.last
       end
 
-      def source_line_at(lineno)
-        file_source[lineno - 1]
-      end
-
       def file_source
-        File.read(location.first).split("\n").map do |line|
-          line.gsub(/^\s+/, '')
-        end
+        SourceLines.process(File.read(location.first))
       end
       memoize :file_source
 
