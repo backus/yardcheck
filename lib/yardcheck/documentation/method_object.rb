@@ -39,18 +39,6 @@ module Yardcheck
         [yardoc.file, yardoc.line]
       end
 
-      def unknown_param?
-        params.any? { |(_name, owner)| owner.nil? }
-      end
-
-      def unknown_module?
-        namespace.nil?
-      end
-
-      def unknown_return_value?
-        return_type.nil?
-      end
-
       def method_identifier
         [namespace, selector, scope]
       end
@@ -69,7 +57,7 @@ module Yardcheck
 
       def warnings
         param_warnings = param_typedefs.select { |_, typedef| typedef.invalid_const? }.values
-        return_warning = return_typedef&.invalid_const? ? [return_typedef] : []
+        return_warning = return_typedef if return_typedef&.invalid_const?
 
         [*param_warnings, *return_warning].map { |warning| Warning.new(self, warning) }
       end
@@ -104,7 +92,7 @@ module Yardcheck
       end
 
       def source_starting_line
-        location.fetch(1)
+        location.last
       end
 
       def source_line_at(lineno)

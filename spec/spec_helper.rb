@@ -2,6 +2,7 @@
 
 require 'pathname'
 require 'bundler'
+require 'timeout'
 
 Bundler.with_clean_env { system('cd test_app && yard --no-cache --no-output > /dev/null') }
 
@@ -38,6 +39,10 @@ RSpec.configure do |config|
 
     # Define metadata for mutant so it knows to never run these tests
     metadata[:mutest] = false
+  end
+
+  config.around(file_path: %r{\bspec/unit/}) do |example|
+    Timeout.timeout(0.1, &example)
   end
 end
 

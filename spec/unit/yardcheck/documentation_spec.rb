@@ -5,10 +5,14 @@ require 'pathname'
 require 'yard'
 
 RSpec.describe Yardcheck::Documentation do
-  def doc_for(title)
+  def yardocs_for(title)
     selection = YardcheckSpec::YARDOCS.select { |doc| doc.title == title }
     fail "Unable to find doc with title #{title}" if selection.empty?
-    described_class.new(selection)
+    selection
+  end
+
+  def doc_for(title)
+    described_class.new(yardocs_for(title))
   end
 
   def method_object(title)
@@ -94,5 +98,42 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'ignores invalid constant resolve' do
     expect(method_object('TestApp::Namespace#ignoring_invalid_types').params).to be_empty
+  end
+
+  it 'produces warnings for unresolvable params and returns' do
+    method_object = method_object('TestApp::Namespace#ignoring_invalid_types')
+    expect(method_object.warnings).to eql([
+      Yardcheck::Warning.new(
+        method_object,
+        Yardcheck::Typedef::Parser.new('TestApp::Namespace', %w[What]).parse
+      ),
+      Yardcheck::Warning.new(
+        method_object,
+        Yardcheck::Typedef::Parser.new('TestApp::Namespace', %w[Wow]).parse
+      )
+    ])
+  end
+
+  it 'does not produce warnings for normal methods' do
+    aggregate_failures do
+      expect(method_object('TestApp::Namespace#add').warnings).to eql([])
+      expect(method_object('TestApp::Namespace#undocumented').warnings).to eql([])
+    end
+  end
+
+  it 'exposes source' do
+    yardoc = yardocs_for('TestApp::Namespace#return_self').first
+
+    allow(yardoc).to receive(:file).and_wrap_original do |method|
+      File.join('./test_app', method.call).to_s
+    end
+
+    method_object = described_class::MethodObject.new(yardoc)
+    expect(method_object.source).to eql(<<~RUBY.chomp)
+    # @return [Namespace]
+    def return_self
+      self
+    end
+    RUBY
   end
 end
