@@ -23,5 +23,10 @@ You are saying that you are always going to be passing in a `User` instance and 
 
 `yardcheck` traces method invocations to observe the parameters and return values in your application while running your test suite. When your test suite finishes running we compare the observed types found while running your tests against the types in your documentation.
 
+# Is this ready?
 
+Kind of.
 
+It is not ready to be run in CI to check your documentation and it may never be since tracing method calls is fairly slow. We also sometimes mess up. For example, if another method raises and error then all of the methods that bubble up that error without rescuing it will be marked as returning `nil`. This seems like a limitation of ruby's `TracePoint` right now.
+
+It is very helpful though. It will find a lot of cases where your documentation isn't quite right and the output is clear. Install it and give it a try.
