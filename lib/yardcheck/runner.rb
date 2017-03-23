@@ -4,12 +4,16 @@ module Yardcheck
   class Runner
     include Concord.new(:observations, :output), Memoizable
 
+    # rubocop:disable MethodLength
     def self.run(args)
       options = { rspec: 'spec' }
 
       parser =
         OptionParser.new do |opt|
-          opt.on('--namespace NS', 'Namespace to check documentation for and watch methods calls for') do |arg|
+          opt.on(
+            '--namespace NS',
+            'Namespace to check documentation for and watch methods calls for'
+          ) do |arg|
             options[:namespace] = arg
           end
 
@@ -28,7 +32,8 @@ module Yardcheck
 
       parser.parse(args)
 
-      namespace, include_path, require_target, rspec = arguments = options.fetch_values(:namespace, :include, :require, :rspec)
+      arguments = options.fetch_values(:namespace, :include, :require, :rspec)
+      namespace, include_path, require_target, rspec = arguments
 
       fail 'All arguments are required' if arguments.any?(&:nil?)
 

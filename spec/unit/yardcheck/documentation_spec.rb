@@ -135,10 +135,10 @@ RSpec.describe Yardcheck::Documentation do
 
     method_object = described_class::MethodObject.new(yardoc)
     expect(method_object.source).to eql(<<~RUBY.chomp)
-    # @return [Namespace]
-    def return_self
-      self
-    end
+      # @return [Namespace]
+      def return_self
+        self
+      end
     RUBY
   end
 

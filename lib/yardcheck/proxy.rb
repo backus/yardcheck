@@ -12,7 +12,7 @@ module Yardcheck
 
     def method_missing(method_name, *args, &block)
       if target_respond_to?(method_name)
-        @target.send(method_name, *args, &block)
+        @target.__send__(method_name, *args, &block)
       else
         ::Object
           .instance_method(method_name)

@@ -7,9 +7,9 @@ RSpec.describe Yardcheck::Const do
     module Foo
       module Bar
         module Baz
-        end
-      end
-    end
+        end # Baz
+      end # Bar
+    end # Foo
   end
 
   it 'resolves top level constant' do

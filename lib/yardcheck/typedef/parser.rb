@@ -19,7 +19,10 @@ module Yardcheck
       def resolve_yard_type(yard_type)
         case yard_type
         when YARD::Tags::TypesExplainer::CollectionType
-          Collection.new(*resolve_type(yard_type.name), yard_type.types.flat_map(&method(:resolve_yard_type)))
+          Collection.new(
+            *resolve_type(yard_type.name),
+            yard_type.types.flat_map(&method(:resolve_yard_type))
+          )
         when YARD::Tags::TypesExplainer::Type
           types = resolve_type(yard_type.name)
           case types

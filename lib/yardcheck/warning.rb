@@ -10,5 +10,5 @@ module Yardcheck
     def message
       format(MSG, typedef: typedef.signature, location: method_object.location_pointer)
     end
-  end
-end
+  end # Warning
+end # Yardcheck

@@ -34,6 +34,6 @@ module Yardcheck
       def valid?
         false
       end
-    end
-  end
-end
+    end # Invalid
+  end # Const
+end # Yardcheck

@@ -2,9 +2,10 @@
 
 RSpec.describe Yardcheck::Typedef do
   def typedef(*types)
-    typedefs = types.map do |type|
-      described_class::Literal.new(Yardcheck::Const.new(type))
-    end
+    typedefs =
+      types.map do |type|
+        described_class::Literal.new(Yardcheck::Const.new(type))
+      end
 
     described_class.new(typedefs)
   end

@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'concord'
   spec.add_dependency 'anima'
   spec.add_dependency 'rspec'
-  spec.add_dependency "coderay",  "~> 1.1"
+  spec.add_dependency 'coderay',  '~> 1.1'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-byebug'
 end
