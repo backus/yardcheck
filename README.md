@@ -78,6 +78,6 @@ In this case I would update the documentation to be `@param [#call, nil] block`
 
 Kind of.
 
-It is not ready to be run in CI to check your documentation and it may never be since tracing method calls is fairly slow. We also sometimes mess up. For example, if another method raises and error then all of the methods that bubble up that error without rescuing it will be marked as returning `nil`. This seems like a limitation of ruby's `TracePoint` right now.
+It is not ready to be run in CI to check your documentation and it may never be since tracing method calls is fairly slow. We also sometimes mess up. For example, if another method raises an error then all of the methods that bubble up that error without rescuing it will be marked as returning `nil`. This seems like a limitation of ruby's `TracePoint` right now.
 
 It is very helpful though. It will find a lot of cases where your documentation isn't quite right and the output is clear. Install it and give it a try.
