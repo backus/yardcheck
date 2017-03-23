@@ -31,7 +31,9 @@ RSpec.describe Yardcheck::Documentation do
     Yardcheck::Const.new(constant)
   end
 
-  let(:namespace_add) { method_object('TestApp::Namespace#add') }
+  let(:namespace_add) { method_object('TestApp::Namespace#add')                    }
+  let(:undocumented)  { method_object('TestApp::Namespace#undocumented')           }
+  let(:invalid)       { method_object('TestApp::Namespace#ignoring_invalid_types') }
 
   it 'resolves constant' do
     expect(namespace_add.namespace).to eql(TestApp::Namespace)
@@ -101,23 +103,26 @@ RSpec.describe Yardcheck::Documentation do
   end
 
   it 'produces warnings for unresolvable params and returns' do
-    method_object = method_object('TestApp::Namespace#ignoring_invalid_types')
-    expect(method_object.warnings).to eql([
+    expect(invalid.warnings).to eql([
       Yardcheck::Warning.new(
-        method_object,
+        invalid,
         Yardcheck::Typedef::Parser.new('TestApp::Namespace', %w[What]).parse
       ),
       Yardcheck::Warning.new(
-        method_object,
+        invalid,
         Yardcheck::Typedef::Parser.new('TestApp::Namespace', %w[Wow]).parse
       )
     ])
   end
 
+  it 'does not provide a return type when documentation is invalid' do
+    expect(invalid.return_type).to be(nil)
+  end
+
   it 'does not produce warnings for normal methods' do
     aggregate_failures do
       expect(method_object('TestApp::Namespace#add').warnings).to eql([])
-      expect(method_object('TestApp::Namespace#undocumented').warnings).to eql([])
+      expect(undocumented.warnings).to eql([])
     end
   end
 
@@ -135,5 +140,9 @@ RSpec.describe Yardcheck::Documentation do
       self
     end
     RUBY
+  end
+
+  it 'return type of undocumented' do
+    expect(undocumented.return_type).to be(nil)
   end
 end

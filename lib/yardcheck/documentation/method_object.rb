@@ -6,7 +6,7 @@ module Yardcheck
       include Concord.new(:yardoc), Adamantium::Flat
 
       def selector
-        yardoc.name.to_sym
+        yardoc.name
       end
 
       def namespace
@@ -14,12 +14,8 @@ module Yardcheck
       end
       memoize :namespace
 
-      def param(name)
-        params.fetch(name)
-      end
-
       def params
-        param_typedefs.select { |key, value| key && !value.invalid_const? }.to_h
+        param_typedefs.select { |key, value| key && !value.invalid_const? }
       end
       memoize :params
 
@@ -28,7 +24,7 @@ module Yardcheck
       end
 
       def singleton?
-        scope == :class
+        scope.equal?(:class)
       end
 
       def scope
@@ -65,7 +61,7 @@ module Yardcheck
       private
 
       def return_typedef
-        return_tag.map(&method(:typedefs)).reduce(:+) unless return_tag.empty?
+        return_tag.map(&method(:typedefs)).reduce(:+)
       end
       memoize :return_typedef
 
