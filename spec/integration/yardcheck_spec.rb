@@ -35,6 +35,7 @@ RSpec.describe 'test app integration' do
   it 'generates a warning for invalid constant' do
     expect_report('WARNING: Unabled to resolve "What" for lib/test_app.rb:37')
     expect_report('WARNING: Unabled to resolve "Wow" for lib/test_app.rb:37')
+    expect_report('WARNING: Unabled to resolve :foo for lib/test_app.rb:109')
   end
 
   it 'reports expectations' do

@@ -8,6 +8,8 @@ module Yardcheck
       if types.include?(:undefined)
         fail 'Cannot combined [undefined] with other types' unless types.one?
         Undefined.new
+      elsif types.grep(Parser::Invalid).any?
+        Invalid.new(types)
       else
         new(types)
       end
@@ -108,5 +110,13 @@ module Yardcheck
         false
       end
     end # Ducktype
+
+    class Invalid < self
+      include Concord.new(:types)
+
+      def invalid_const?
+        true
+      end
+    end
   end # Typedef
 end # Yardcheck

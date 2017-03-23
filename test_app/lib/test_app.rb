@@ -105,6 +105,11 @@ module TestApp
       1
     end
 
+    # @return [:foo]
+    def returns_literal_symbol
+      :foo
+    end
+
     class Parent
     end
 

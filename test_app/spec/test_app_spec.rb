@@ -42,4 +42,8 @@ RSpec.describe TestApp::Namespace do
   it 'improperly documents the param with an invalid const' do
     expect(TestApp::Namespace.new.ignoring_invalid_types('hi')).to be(nil)
   end
+
+  it 'returns a literal symbol' do
+    expect(TestApp::Namespace.new.returns_literal_symbol).to be(:foo)
+  end
 end

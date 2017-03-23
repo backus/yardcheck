@@ -10,10 +10,18 @@ module Yardcheck
       end
 
       def parse_type(type)
-        parsed_types = YARD::Tags::TypesExplainer::Parser.parse(type)
-        parsed_types.map do |parsed_type|
+        parsed = parse_yard_type(type)
+        return [parsed] if parsed.is_a?(Invalid)
+
+        parsed.map do |parsed_type|
           resolve_yard_type(parsed_type)
         end
+      end
+
+      def parse_yard_type(type)
+        YARD::Tags::TypesExplainer::Parser.parse(type)
+      rescue SyntaxError => error
+        Invalid.new(type, error.message)
       end
 
       def resolve_yard_type(yard_type)
@@ -61,6 +69,14 @@ module Yardcheck
         namespace_const.constant
       end
       memoize :namespace_constant
+
+      class Invalid
+        include Concord.new(:type, :error)
+
+        def signature
+          type
+        end
+      end
     end # Parser
   end # Typedef
 end # Yardcheck
