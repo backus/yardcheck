@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
-require 'yardcheck/version'
+require 'anima'
+require 'concord'
+require 'yard'
+require 'rspec'
+require 'coderay'
 
-module Yardcheck
-end # Yardcheck
+require 'yardcheck/version'
+require 'yardcheck/runner'
+require 'yardcheck/method_tracer'
+require 'yardcheck/method_call'
+require 'yardcheck/proxy'
+require 'yardcheck/test_value'
+require 'yardcheck/test_runner'
+require 'yardcheck/const'
+require 'yardcheck/documentation'
+require 'yardcheck/documentation/method_object'
+require 'yardcheck/typedef'
+require 'yardcheck/typedef/parser'
+require 'yardcheck/observation'
+require 'yardcheck/spec_observer'
+require 'yardcheck/color'
+require 'yardcheck/violation'
+require 'yardcheck/warning'
+require 'yardcheck/source_lines'

@@ -15,3 +15,8 @@ group :lint do
   gem 'rubocop-devtools', git: 'https://github.com/backus/rubocop-devtools.git'
   gem 'rubocop-rspec',    git: 'https://github.com/backus/rubocop-rspec.git'
 end
+
+gem 'guard'
+gem 'guard-rspec'
+gem 'mutest', '0.0.6'
+gem 'mutest-rspec'
