@@ -14,9 +14,9 @@ When you write documentation like this
 # @param user [User]
 #
 # @return [true,false]
-# def valid?(user)
-# ...
-# end
+def valid?(user)
+  # ...
+end
 ```
 
 You are saying that you are always going to be passing in a `User` instance and the method will always returns `true` or `false`.
