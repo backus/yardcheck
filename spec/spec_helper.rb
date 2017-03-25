@@ -4,7 +4,11 @@ require 'pathname'
 require 'bundler'
 require 'timeout'
 
-Bundler.with_clean_env { system('cd test_app && yard --no-cache --no-output > /dev/null') }
+Bundler.with_clean_env do
+  Dir.chdir('test_app') do
+    YARD::CLI::Yardoc.run(*%w[--no-cache --no-output --no-stats --quiet --no-progress .])
+  end
+end
 
 begin
   require 'mutest'

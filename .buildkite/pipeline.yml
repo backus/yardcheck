@@ -1,0 +1,10 @@
+steps:
+  - command: "build/run 2.3.3 'rspec'"
+    label: ":rspec: RSpec"
+    agents:
+      - queue=elastic
+
+  - name: ':rubocop: Rubocop'
+    command: build/run 2.3.3 rubocop
+    agents:
+      - queue=elastic
