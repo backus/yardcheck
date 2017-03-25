@@ -110,6 +110,13 @@ module TestApp
       :foo
     end
 
+    # This should be ignored since truthy and falsey values are all values
+    #
+    # @return [Boolean]
+    def truthy_predicate?
+      1
+    end
+
     class Parent
     end
 

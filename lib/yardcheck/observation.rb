@@ -66,7 +66,8 @@ module Yardcheck
       documentation.return_type &&
         !documentation.return_type.match?(event.return_value) &&
         !event.raised? &&
-        !event.initialize?
+        !event.initialize? &&
+        !documentation.predicate_method?
     end
   end # Observation
 end # Yardcheck

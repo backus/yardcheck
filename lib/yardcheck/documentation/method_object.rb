@@ -58,6 +58,10 @@ module Yardcheck
         [*param_warnings, *return_warning].map { |warning| Warning.new(self, warning) }
       end
 
+      def predicate_method?
+        selector.to_s.end_with?('?')
+      end
+
       private
 
       def return_typedef

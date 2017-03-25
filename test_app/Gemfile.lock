@@ -1,11 +1,11 @@
 PATH
   remote: ..
   specs:
-    yardcheck (0.0.0)
-      anima
+    yardcheck (0.0.1)
+      anima (~> 0.3)
       coderay (~> 1.1)
-      concord
-      rspec
+      concord (~> 0.1)
+      rspec (~> 3.4)
       yard (~> 0.9)
 
 GEM
