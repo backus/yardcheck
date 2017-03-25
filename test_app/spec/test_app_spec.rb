@@ -46,4 +46,8 @@ RSpec.describe TestApp::Namespace do
   it 'returns a literal symbol' do
     expect(TestApp::Namespace.new.returns_literal_symbol).to be(:foo)
   end
+
+  it 'returns a truthy value for predicate?' do
+    expect(TestApp::Namespace.new.truthy_predicate?).to be_truthy
+  end
 end
