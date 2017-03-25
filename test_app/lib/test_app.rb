@@ -47,8 +47,9 @@ module TestApp
       'str'
     end
 
+    # @param foo but not type definition in brackets
     # @return no type specified here
-    def return_tag_without_type
+    def tags_without_types(foo)
     end
 
     # @param [String]
