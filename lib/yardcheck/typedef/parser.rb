@@ -76,7 +76,7 @@ module Yardcheck
         def signature
           type
         end
-      end
+      end # Invalid
     end # Parser
   end # Typedef
 end # Yardcheck

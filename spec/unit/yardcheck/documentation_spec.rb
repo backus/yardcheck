@@ -148,7 +148,7 @@ RSpec.describe Yardcheck::Documentation do
 
   it 'identifies predicate methods' do
     aggregate_failures do
-      expect(namespace_add).to_not be_predicate_method
+      expect(namespace_add).not_to be_predicate_method
       expect(method_object('TestApp::Namespace#truthy_predicate?')).to be_predicate_method
     end
   end

@@ -11,9 +11,10 @@ group :test do
 end
 
 group :lint do
+  gem 'rake' # sickill/rainbow#44
   gem 'rubocop',          git: 'https://github.com/bbatsov/rubocop.git'
   gem 'rubocop-devtools', git: 'https://github.com/backus/rubocop-devtools.git'
-  gem 'rubocop-rspec',    git: 'https://github.com/backus/rubocop-rspec.git'
+  gem 'rubocop-rspec', git: 'https://github.com/backus/rubocop-rspec.git'
 end
 
 gem 'guard'

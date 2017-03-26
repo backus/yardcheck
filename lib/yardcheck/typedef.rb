@@ -117,6 +117,6 @@ module Yardcheck
       def invalid_const?
         true
       end
-    end
+    end # Invalid
   end # Typedef
 end # Yardcheck
