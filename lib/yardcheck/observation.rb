@@ -59,15 +59,16 @@ module Yardcheck
     end
 
     def return_violations
-      invalid_return_type? ? [Violation::Return.new(self)] : []
+      valid_return? ? [Violation::Return.new(self)] : []
     end
 
-    def invalid_return_type?
+    def valid_return?
       documentation.return_type &&
         !documentation.return_type.match?(event.return_value) &&
         !event.raised? &&
         !event.initialize? &&
-        !documentation.predicate_method?
+        !documentation.predicate_method? &&
+        !event.maybe_inside_exception_raise?
     end
   end # Observation
 end # Yardcheck

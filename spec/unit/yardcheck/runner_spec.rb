@@ -20,22 +20,24 @@ RSpec.describe Yardcheck::Runner do
   let(:observed_events) do
     [
       Yardcheck::MethodCall.process(
-        scope:            :instance,
-        selector:         :add,
-        namespace:        TestApp::Namespace,
-        params:           { left: 'foo', right: 3 },
-        return_value:     5,
-        example_location: 'test_app_spec.rb:1',
-        error_raised:     false
+        scope:              :instance,
+        selector:           :add,
+        namespace:          TestApp::Namespace,
+        params:             { left: 'foo', right: 3 },
+        return_value:       5,
+        example_location:   'test_app_spec.rb:1',
+        error_raised:       false,
+        in_ambiguous_raise: false
       ),
       Yardcheck::MethodCall.process(
-        scope:            :class,
-        selector:         :add,
-        namespace:        TestApp::Namespace.singleton_class,
-        params:           { left: 2, right: 3 },
-        return_value:     5,
-        example_location: 'test_app_spec.rb:2',
-        error_raised:     false
+        scope:              :class,
+        selector:           :add,
+        namespace:          TestApp::Namespace.singleton_class,
+        params:             { left: 2, right: 3 },
+        return_value:       5,
+        example_location:   'test_app_spec.rb:2',
+        error_raised:       false,
+        in_ambiguous_raise: false
       )
     ]
   end
@@ -44,7 +46,7 @@ RSpec.describe Yardcheck::Runner do
     <<~MSG
       Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
 
-          source: ./test_app/lib/test_app.rb:9
+          source: ./test_app/lib/test_app.rb:13
           tests:
             - test_app_spec.rb:2
 
@@ -60,7 +62,7 @@ RSpec.describe Yardcheck::Runner do
 
       Expected TestApp::Namespace#add to receive Integer for left but observed String
 
-          source: ./test_app/lib/test_app.rb:19
+          source: ./test_app/lib/test_app.rb:23
           tests:
             - test_app_spec.rb:1
 
@@ -76,7 +78,7 @@ RSpec.describe Yardcheck::Runner do
 
       Expected TestApp::Namespace#add to return String but observed Fixnum
 
-          source: ./test_app/lib/test_app.rb:19
+          source: ./test_app/lib/test_app.rb:23
           tests:
             - test_app_spec.rb:1
 
@@ -111,31 +113,34 @@ RSpec.describe Yardcheck::Runner do
     let(:observed_events) do
       [
         Yardcheck::MethodCall.process(
-          scope:            :instance,
-          selector:         :add,
-          namespace:        TestApp::Namespace,
-          params:           { left: 'foo', right: 3 },
-          return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:1',
-          error_raised:     false
+          scope:              :instance,
+          selector:           :add,
+          namespace:          TestApp::Namespace,
+          params:             { left: 'foo', right: 3 },
+          return_value:       'valid return type',
+          example_location:   'test_app_spec.rb:1',
+          error_raised:       false,
+          in_ambiguous_raise: false
         ),
         Yardcheck::MethodCall.process(
-          scope:            :instance,
-          selector:         :add,
-          namespace:        TestApp::Namespace,
-          params:           { left: 'foo', right: 3 },
-          return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:2',
-          error_raised:     false
+          scope:              :instance,
+          selector:           :add,
+          namespace:          TestApp::Namespace,
+          params:             { left: 'foo', right: 3 },
+          return_value:       'valid return type',
+          example_location:   'test_app_spec.rb:2',
+          error_raised:       false,
+          in_ambiguous_raise: false
         ),
         Yardcheck::MethodCall.process(
-          scope:            :instance,
-          selector:         :add,
-          namespace:        TestApp::Namespace,
-          params:           { left: 1, right: 'now this one is wrong' },
-          return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:3',
-          error_raised:     false
+          scope:              :instance,
+          selector:           :add,
+          namespace:          TestApp::Namespace,
+          params:             { left: 1, right: 'now this one is wrong' },
+          return_value:       'valid return type',
+          example_location:   'test_app_spec.rb:3',
+          error_raised:       false,
+          in_ambiguous_raise: false
         )
       ]
     end
@@ -144,7 +149,7 @@ RSpec.describe Yardcheck::Runner do
       <<~MSG
         Expected TestApp::Namespace#add to receive Integer for left but observed String
 
-            source: ./test_app/lib/test_app.rb:19
+            source: ./test_app/lib/test_app.rb:23
             tests:
               - test_app_spec.rb:1
               - test_app_spec.rb:2
@@ -161,7 +166,7 @@ RSpec.describe Yardcheck::Runner do
 
         Expected TestApp::Namespace#add to receive Integer for right but observed String
 
-            source: ./test_app/lib/test_app.rb:19
+            source: ./test_app/lib/test_app.rb:23
             tests:
               - test_app_spec.rb:3
 

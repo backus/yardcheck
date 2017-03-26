@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'test_app/ambiguous_raise'
+
 module TestApp
   class Namespace
     # Singleton method with correct param definition and incorrect return

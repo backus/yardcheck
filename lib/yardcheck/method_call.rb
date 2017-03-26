@@ -9,7 +9,8 @@ module Yardcheck
       :params,
       :example_location,
       :return_value,
-      :error_raised
+      :error_raised,
+      :in_ambiguous_raise
     )
 
     def self.process(params:, return_value:, **attributes)
@@ -21,6 +22,10 @@ module Yardcheck
       return_value = TestValue.process(return_value)
 
       new(params: params, return_value: return_value, **attributes)
+    end
+
+    def maybe_inside_exception_raise?
+      in_ambiguous_raise
     end
 
     def method_identifier
