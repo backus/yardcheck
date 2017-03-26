@@ -37,24 +37,26 @@ RSpec.describe Yardcheck::MethodTracer do
 
     expect(tracer.events).to eq([
       Yardcheck::MethodCall.process(
-        scope:              :class,
-        selector:           :singleton_method_example,
-        namespace:          Foo.singleton_class,
-        params:             { baz: 'Hello' },
-        return_value:       'HELLO',
-        example_location:   RSpec.current_example.location,
-        error_raised:       false,
-        in_ambiguous_raise: false
+        scope:                     :class,
+        selector:                  :singleton_method_example,
+        namespace:                 Foo.singleton_class,
+        params:                    { baz: 'Hello' },
+        return_value:              'HELLO',
+        example_location:          RSpec.current_example.location,
+        error_raised:              false,
+        in_ambiguous_raise:        false,
+        in_ambiguous_block_return: false
       ),
       Yardcheck::MethodCall.process(
-        scope:              :instance,
-        selector:           :instance_method_example,
-        namespace:          Foo,
-        params:             { baz: 'Hello' },
-        return_value:       'HELLO',
-        example_location:   RSpec.current_example.location,
-        error_raised:       false,
-        in_ambiguous_raise: false
+        scope:                     :instance,
+        selector:                  :instance_method_example,
+        namespace:                 Foo,
+        params:                    { baz: 'Hello' },
+        return_value:              'HELLO',
+        example_location:          RSpec.current_example.location,
+        error_raised:              false,
+        in_ambiguous_raise:        false,
+        in_ambiguous_block_return: false
       )
     ])
   end
