@@ -5,7 +5,9 @@ module Yardcheck
     include Concord.new(:types)
 
     def self.parse(types)
-      if types.include?(:undefined)
+      if types.empty?
+        Unspecified.new
+      elsif types.include?(:undefined)
         fail 'Cannot combined [undefined] with other types' unless types.one?
         Undefined.new
       elsif types.grep(Parser::Invalid).any?
@@ -32,6 +34,18 @@ module Yardcheck
     def invalid_const?
       types.any?(&:invalid_const?)
     end
+
+    class Unspecified < self
+      include Concord.new
+
+      def signature
+        '(Unspecified type)'
+      end
+
+      def invalid_const?
+        true
+      end
+    end # Unspecified
 
     class Literal < self
       include Concord.new(:const)

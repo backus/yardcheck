@@ -50,4 +50,8 @@ RSpec.describe TestApp::Namespace do
   it 'returns a truthy value for predicate?' do
     expect(TestApp::Namespace.new.truthy_predicate?).to be_truthy
   end
+
+  specify do
+    expect(TestApp::Namespace.new.tags_without_types(1)).to be(nil)
+  end
 end

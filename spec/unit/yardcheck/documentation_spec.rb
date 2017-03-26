@@ -59,8 +59,10 @@ RSpec.describe Yardcheck::Documentation do
   end
 
   it 'handles documented returns without types' do
-    expect(method_object('TestApp::Namespace#return_tag_without_type').return_type)
-      .to eql(typedef)
+    aggregate_failures do
+      expect(method_object('TestApp::Namespace#tags_without_types').return_type).to be(nil)
+      expect(method_object('TestApp::Namespace#tags_without_types').params).to eql({})
+    end
   end
 
   it 'handles returns with a literal nil' do
