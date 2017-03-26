@@ -6,6 +6,11 @@ module Yardcheck
 
     def initialize(namespace)
       super(namespace, [], [])
+
+      # When an exception is raised it isn't clear when it has been eventually rescued.
+      # We set `@ambiguous_exception_state` to `true` when we have observed an exception
+      # and have not seen a non `nil` return.
+      @ambiguous_exception_state = false
     end
 
     def trace(&block)
@@ -17,6 +22,8 @@ module Yardcheck
     end
 
     private
+
+    attr_reader :ambiguous_exception_state
 
     def tracer
       TracePoint.new(:call, :return, :raise) do |event|
@@ -54,13 +61,20 @@ module Yardcheck
     end
 
     def process_return(trace_event)
+      return_value = trace_event.return_value
+      @ambiguous_exception_state = false unless nil.equal?(return_value)
+
       seen << MethodCall.process(
-        call_stack.pop.merge(return_value: trace_event.return_value)
+        call_stack.pop.merge(
+          return_value:       trace_event.return_value,
+          in_ambiguous_raise: ambiguous_exception_state
+        )
       )
     end
 
     def process_raise
       call_stack.last[:error_raised] = true
+      @ambiguous_exception_state = true
     end
 
     def event_details(event)
