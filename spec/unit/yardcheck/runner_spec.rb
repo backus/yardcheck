@@ -48,7 +48,7 @@ RSpec.describe Yardcheck::Runner do
     <<~MSG
       Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
 
-          source: ./test_app/lib/test_app.rb:14
+          source: ./test_app/lib/test_app.rb:15
           tests:
             - test_app_spec.rb:2
 
@@ -64,7 +64,7 @@ RSpec.describe Yardcheck::Runner do
 
       Expected TestApp::Namespace#add to receive Integer for left but observed String
 
-          source: ./test_app/lib/test_app.rb:24
+          source: ./test_app/lib/test_app.rb:25
           tests:
             - test_app_spec.rb:1
 
@@ -80,7 +80,7 @@ RSpec.describe Yardcheck::Runner do
 
       Expected TestApp::Namespace#add to return String but observed Fixnum
 
-          source: ./test_app/lib/test_app.rb:24
+          source: ./test_app/lib/test_app.rb:25
           tests:
             - test_app_spec.rb:1
 
@@ -154,7 +154,7 @@ RSpec.describe Yardcheck::Runner do
       <<~MSG
         Expected TestApp::Namespace#add to receive Integer for left but observed String
 
-            source: ./test_app/lib/test_app.rb:24
+            source: ./test_app/lib/test_app.rb:25
             tests:
               - test_app_spec.rb:1
               - test_app_spec.rb:2
@@ -171,7 +171,7 @@ RSpec.describe Yardcheck::Runner do
 
         Expected TestApp::Namespace#add to receive Integer for right but observed String
 
-            source: ./test_app/lib/test_app.rb:24
+            source: ./test_app/lib/test_app.rb:25
             tests:
               - test_app_spec.rb:3
 
