@@ -2,6 +2,7 @@
 
 require 'test_app/ambiguous_raise'
 require 'test_app/block_return'
+require 'test_app/tracepoint_bug'
 
 module TestApp
   class Namespace

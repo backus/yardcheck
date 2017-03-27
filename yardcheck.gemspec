@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'anima',    '~> 0.3'
   spec.add_dependency 'rspec',    '~> 3.4'
   spec.add_dependency 'coderay',  '~> 1.1'
+  spec.add_dependency 'parser'
 end

@@ -5,6 +5,7 @@ PATH
       anima (~> 0.3)
       coderay (~> 1.1)
       concord (~> 0.1)
+      parser
       rspec (~> 3.4)
       yard (~> 0.9)
 
@@ -19,6 +20,7 @@ GEM
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2)
       equalizer (~> 0.0.11)
+    ast (2.3.0)
     byebug (9.0.6)
     coderay (1.1.1)
     concord (0.1.5)
@@ -30,6 +32,8 @@ GEM
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
+    parser (2.4.0.0)
+      ast (~> 2.2)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)

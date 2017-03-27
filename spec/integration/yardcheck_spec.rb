@@ -33,11 +33,11 @@ RSpec.describe 'test app integration' do
   end
 
   it 'generates a warning for invalid constant' do
-    expect_report('WARNING: Unabled to resolve "What" for lib/test_app.rb:42')
-    expect_report('WARNING: Unabled to resolve "Wow" for lib/test_app.rb:42')
-    expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:57')
-    expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:57')
-    expect_report('WARNING: Unabled to resolve :foo for lib/test_app.rb:115')
+    expect_report('WARNING: Unabled to resolve "What" for lib/test_app.rb:43')
+    expect_report('WARNING: Unabled to resolve "Wow" for lib/test_app.rb:43')
+    expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:58')
+    expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:58')
+    expect_report('WARNING: Unabled to resolve :foo for lib/test_app.rb:116')
   end
 
   it 'reports expectations' do

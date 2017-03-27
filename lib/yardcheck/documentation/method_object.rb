@@ -62,6 +62,11 @@ module Yardcheck
         selector.to_s.end_with?('?')
       end
 
+      def processed_source
+        ProcessedSource.new(yardoc.source)
+      end
+      memoize :processed_source
+
       private
 
       def return_typedef

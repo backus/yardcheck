@@ -62,13 +62,20 @@ module Yardcheck
       valid_return? ? [Violation::Return.new(self)] : []
     end
 
-    def valid_return?
+    def valid_return? # rubocop:disable AbcSize
       documentation.return_type &&
         !documentation.return_type.match?(event.return_value) &&
         !event.raised? &&
         !event.initialize? &&
         !documentation.predicate_method? &&
-        !event.ambiguous_return_state?
+        !event.ambiguous_return_state? &&
+        !possible_tracepoint_bug?
+    end
+
+    def possible_tracepoint_bug?
+      return false unless event.return_value.is?(nil)
+
+      documentation.processed_source.tracepoint_bug_candidate?
     end
   end # Observation
 end # Yardcheck
