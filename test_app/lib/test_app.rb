@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_app/ambiguous_raise'
+require 'test_app/block_return'
 
 module TestApp
   class Namespace

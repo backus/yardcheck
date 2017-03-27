@@ -68,7 +68,7 @@ module Yardcheck
         !event.raised? &&
         !event.initialize? &&
         !documentation.predicate_method? &&
-        !event.maybe_inside_exception_raise?
+        !event.ambiguous_return_state?
     end
   end # Observation
 end # Yardcheck
