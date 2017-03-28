@@ -124,6 +124,17 @@ module TestApp
       1
     end
 
+    # @return [Array<Hash>]
+    def special_cases_top_level_constants
+      [{}]
+    end
+
+    class Hash
+    end
+
+    class Array
+    end
+
     class Parent
     end
 
