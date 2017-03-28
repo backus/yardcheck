@@ -4,8 +4,13 @@ module Yardcheck
   class Const
     include Concord::Public.new(:constant)
 
+    SPECIAL_CASES = [
+      Hash,
+      Array
+    ].map { |const| [const.name, const] }.to_h
+
     def self.resolve(constant_name, scope = Object)
-      return new(scope.const_get(constant_name)) if scope.const_defined?(constant_name)
+      return new(const_lookup(scope, constant_name)) if scope.const_defined?(constant_name)
 
       parent = parent_namespace(scope)
       from_parent = resolve(constant_name, parent.constant) if parent.valid?
@@ -21,6 +26,13 @@ module Yardcheck
         resolve(parent_name)
       end
     end
+
+    def self.const_lookup(scope, name)
+      SPECIAL_CASES.fetch(name) do
+        scope.const_get(name) if scope.const_defined?(name)
+      end
+    end
+    private_class_method :const_lookup
 
     def valid?
       true

@@ -56,4 +56,8 @@ RSpec.describe TestApp::Namespace do
   specify do
     expect(object.tags_without_types(1)).to be(nil)
   end
+
+  it 'special cases Array and Hash' do
+    expect(object.special_cases_top_level_constants).to eq([{}])
+  end
 end

@@ -8,6 +8,9 @@ RSpec.describe Yardcheck::Const do
       module Bar
         module Baz
         end # Baz
+
+        class Hash
+        end # Hash
       end # Bar
     end # Foo
   end
@@ -44,5 +47,12 @@ RSpec.describe Yardcheck::Const do
     expect(described_class.resolve('What', Foo::Bar)).to eql(
       described_class::Invalid.new(Foo::Bar, 'What')
     )
+  end
+
+  it 'special cases Hash' do
+    aggregate_failures do
+      expect(described_class.resolve('Hash', Foo::Bar)).to eql(described_class.new(Hash))
+      expect(described_class.resolve('Bar::Hash', Foo)).to eql(described_class.new(Foo::Bar::Hash))
+    end
   end
 end
