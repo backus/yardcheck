@@ -152,5 +152,43 @@ module Yardcheck
         observation.documented_param(name)
       end
     end # Param
+
+    class Raise < self
+      include Equalizer.new(:observation)
+
+      FORMAT =
+        "Expected #{blue('%<shorthand>s')} to raise " \
+        "#{yellow('%<signature>s')} but observed " \
+        "#{red('%<observed_type>s')}"
+
+      def initialize(observation, test_locations = [observation.test_location])
+        super
+      end
+
+      def explanation
+        format(
+          FORMAT,
+          shorthand:     shorthand,
+          signature:     signature,
+          observed_type: observed_type
+        )
+      end
+
+      protected
+
+      def observed_type
+        observation.actual_raise_type
+      end
+
+      private
+
+      def combine_requirements
+        %i[shorthand signature observed_type]
+      end
+
+      def expected_type
+        observation.documented_raise_type
+      end
+    end # Raise
   end # Violation
 end # Yardcheck

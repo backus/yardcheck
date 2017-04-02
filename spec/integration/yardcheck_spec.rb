@@ -37,7 +37,7 @@ RSpec.describe 'test app integration' do
     expect_report('WARNING: Unabled to resolve "Wow" for lib/test_app.rb:43')
     expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:58')
     expect_report('WARNING: Unabled to resolve (Unspecified type) for lib/test_app.rb:58')
-    expect_report('WARNING: Unabled to resolve :foo for lib/test_app.rb:116')
+    expect_report('WARNING: Unabled to resolve :foo for lib/test_app.rb:122')
   end
 
   it 'reports expectations' do
@@ -51,6 +51,10 @@ RSpec.describe 'test app integration' do
       expect_report(
         'Expected TestApp::Namespace#improperly_tested_with_instance_double ' \
         'to receive String for value but observed Integer'
+      )
+      expect_report(
+        'Expected TestApp::Namespace#invalid_raise_documentation to raise ' \
+        'TestApp::Namespace::AppError but observed KeyError'
       )
       matches = report.scan(/^Expected .+ to return .+ but observed .+$/)
       expect(matches.size).to be(3)

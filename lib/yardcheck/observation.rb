@@ -5,7 +5,7 @@ module Yardcheck
     include Concord.new(:documentation, :event)
 
     def violations
-      param_violations + return_violations
+      param_violations + return_violations + raise_violations
     end
 
     def source_code
@@ -36,8 +36,16 @@ module Yardcheck
       documentation.return_type
     end
 
+    def documented_raise_type
+      documentation.raise_type
+    end
+
     def actual_return_type
       event.return_value.type
+    end
+
+    def actual_raise_type
+      event.exception.type
     end
 
     def documentation_warnings
@@ -59,10 +67,20 @@ module Yardcheck
     end
 
     def return_violations
-      valid_return? ? [Violation::Return.new(self)] : []
+      invalid_return? ? [Violation::Return.new(self)] : []
     end
 
-    def valid_return?
+    def raise_violations
+      invalid_raise? ? [Violation::Raise.new(self)] : []
+    end
+
+    def invalid_raise?
+      documentation.raise_type &&
+        event.raise?           &&
+        !documentation.raise_type.match?(event.exception)
+    end
+
+    def invalid_return?
       documentation.return_type                               &&
         event.return?                                         &&
         !documentation.return_type.match?(event.return_value) &&
