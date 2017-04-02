@@ -2,31 +2,21 @@
 
 module Yardcheck
   class MethodCall
-    include Anima.new(
+    include AbstractType, Anima.new(
       :scope,
       :selector,
       :namespace,
       :params,
-      :example_location,
-      :return_value,
-      :error_raised,
-      :in_ambiguous_raise,
-      :in_ambiguous_block_return
+      :example_location
     )
 
-    def self.process(params:, return_value:, **attributes)
+    def self.process(params:, **attributes)
       params =
         params.map do |key, value|
           [key, TestValue.process(value)]
         end.to_h
 
-      return_value = TestValue.process(return_value)
-
-      new(params: params, return_value: return_value, **attributes)
-    end
-
-    def ambiguous_return_state?
-      in_ambiguous_raise || in_ambiguous_block_return
+      new(params: params, **attributes)
     end
 
     def method_identifier
@@ -37,8 +27,35 @@ module Yardcheck
       selector == :initialize && scope == :instance
     end
 
-    def raised?
-      error_raised
+    def raise?
+      false
     end
+
+    def return?
+      false
+    end
+
+    class Return < self
+      include anima.add(:return_value)
+
+      def self.process(return_value:, **kwargs)
+        super(return_value: TestValue.process(return_value), **kwargs)
+      end
+
+      def return?
+        true
+      end
+    end # Return
+
+    class Raise < self
+      include anima.add(:exception)
+
+      def raise?
+        true
+      end
+    end # Raise
+
+    class Jump < self
+    end # Jump
   end # MethodCall
 end # Yardcheck

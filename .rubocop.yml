@@ -212,3 +212,5 @@ Lint/DefEndAlignment:
 # See explanation for `Lint/DefEndAlignment`
 Lint/EndAlignment:
   AutoCorrect: true
+Style/MixinGrouping:
+  EnforcedStyle: grouped

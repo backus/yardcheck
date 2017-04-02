@@ -62,13 +62,12 @@ module Yardcheck
       valid_return? ? [Violation::Return.new(self)] : []
     end
 
-    def valid_return? # rubocop:disable AbcSize
-      documentation.return_type &&
+    def valid_return?
+      documentation.return_type                               &&
+        event.return?                                         &&
         !documentation.return_type.match?(event.return_value) &&
-        !event.raised? &&
-        !event.initialize? &&
-        !documentation.predicate_method? &&
-        !event.ambiguous_return_state? &&
+        !event.initialize?                                    &&
+        !documentation.predicate_method?                      &&
         !possible_tracepoint_bug?
     end
 

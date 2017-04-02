@@ -2,8 +2,7 @@
 
 module Yardcheck
   class ProcessedSource
-    include Concord.new(:raw_source)
-    include Adamantium::Flat
+    include Concord.new(:raw_source), Adamantium::Flat
 
     # @see https://bugs.ruby-lang.org/issues/13369
     def tracepoint_bug_candidate?
