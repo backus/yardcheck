@@ -154,4 +154,10 @@ RSpec.describe Yardcheck::Documentation do
       expect(method_object('TestApp::Namespace#truthy_predicate?')).to be_predicate_method
     end
   end
+
+  it 'exposes documented raise' do
+    expect(method_object('TestApp::Namespace#always_raise').raise_type).to eql(
+      typedef(literal(const(TestApp::Namespace::AppError)))
+    )
+  end
 end

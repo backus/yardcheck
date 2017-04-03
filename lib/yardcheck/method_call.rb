@@ -50,6 +50,10 @@ module Yardcheck
     class Raise < self
       include anima.add(:exception)
 
+      def self.process(exception:, **kwargs)
+        super(exception: TestValue.process(exception), **kwargs)
+      end
+
       def raise?
         true
       end

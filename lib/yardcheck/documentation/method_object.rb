@@ -23,6 +23,10 @@ module Yardcheck
         return_typedef unless return_typedef&.invalid_const?
       end
 
+      def raise_type
+        raise_typedef unless raise_typedef&.invalid_const?
+      end
+
       def singleton?
         scope.equal?(:class)
       end
@@ -70,12 +74,17 @@ module Yardcheck
       private
 
       def return_typedef
-        return_tag.map(&method(:typedefs)).reduce(:+)
+        aggregate_tags(:return)
       end
       memoize :return_typedef
 
-      def return_tag
-        tags(:return)
+      def raise_typedef
+        aggregate_tags(:raise)
+      end
+      memoize :raise_typedef
+
+      def aggregate_tags(name)
+        tags(name).map(&method(:typedefs)).reduce(:+)
       end
 
       def param_typedefs

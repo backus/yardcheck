@@ -105,11 +105,17 @@ module TestApp
 
     AppError = Class.new(StandardError)
 
+    # @raise [AppError]
     # @return [Fixnum]
     def always_raise
       raise AppError
 
       1
+    end
+
+    # @raise [AppError]
+    def invalid_raise_documentation
+      raise KeyError
     end
 
     # @return [:foo]

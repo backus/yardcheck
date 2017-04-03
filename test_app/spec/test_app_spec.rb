@@ -60,4 +60,8 @@ RSpec.describe TestApp::Namespace do
   it 'special cases Array and Hash' do
     expect(object.special_cases_top_level_constants).to eq([{}])
   end
+
+  it 'is documented as raising AppError but actually raises KeyError' do
+    expect { object.invalid_raise_documentation }.to raise_error(KeyError)
+  end
 end
