@@ -10,7 +10,11 @@ module Yardcheck
     ].map { |const| [const.name, const] }.to_h
 
     def self.resolve(constant_name, scope = Object)
-      return new(const_lookup(scope, constant_name)) if scope.const_defined?(constant_name)
+      if scope.equal?(Object) && constant_name.empty?
+        return new(Object)
+      elsif scope.const_defined?(constant_name)
+        return new(const_lookup(scope, constant_name))
+      end
 
       parent = parent_namespace(scope)
       from_parent = resolve(constant_name, parent.constant) if parent.valid?

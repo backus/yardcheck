@@ -15,6 +15,10 @@ RSpec.describe Yardcheck::Const do
     end # Foo
   end
 
+  it 'resolves Object' do
+    expect(described_class.resolve('')).to eql(described_class.new(Object))
+  end
+
   it 'resolves top level constant' do
     expect(described_class.resolve('Foo')).to eql(described_class.new(Foo))
   end
