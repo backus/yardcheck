@@ -40,7 +40,7 @@ RSpec.describe Yardcheck::Runner do
 
   let(:output) do
     <<~MSG
-      Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum
+      Expected #<Class:TestApp::Namespace>#add to return String but observed Integer
 
           source: ./test_app/lib/test_app.rb:15
           tests:
@@ -76,7 +76,7 @@ RSpec.describe Yardcheck::Runner do
             left + right
           end
 
-      Expected TestApp::Namespace#add to return String but observed Fixnum
+      Expected TestApp::Namespace#add to return String but observed Integer
 
           source: ./test_app/lib/test_app.rb:25
           tests:

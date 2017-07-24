@@ -11,7 +11,7 @@ module Yardcheck
     undef_method :!
 
     def method_missing(method_name, *args, &block)
-      if target_respond_to?(method_name)
+      if respond_to_missing?(method_name, true)
         @target.__send__(method_name, *args, &block)
       else
         ::Object
@@ -21,13 +21,20 @@ module Yardcheck
       end
     end
 
-    private
-
-    def target_respond_to?(method_name)
+    def respond_to_missing?(method_name, include_all = false)
       ::Object
         .instance_method(:respond_to?)
         .bind(@target)
-        .call(method_name, true)
+        .call(method_name, include_all)
+    end
+
+    private
+
+    def object_dispatch(receiver, method_name, *params)
+      ::Object
+        .instance_method(method_name)
+        .bind(receiver)
+        .call(*params)
     end
   end # Proxy
 end # Yardcheck

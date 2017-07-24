@@ -42,8 +42,10 @@ RSpec.describe 'test app integration' do
 
   it 'reports expectations' do
     aggregate_failures do
-      expect_report('Expected TestApp::Namespace#add to return String but observed Fixnum')
-      expect_report('Expected #<Class:TestApp::Namespace>#add to return String but observed Fixnum')
+      expect_report('Expected TestApp::Namespace#add to return String but observed Integer')
+      expect_report(
+        'Expected #<Class:TestApp::Namespace>#add to return String but observed Integer'
+      )
       expect_report(
         'Expected TestApp::Namespace#documents_relative ' \
         'to return TestApp::Namespace::Child but observed String'
