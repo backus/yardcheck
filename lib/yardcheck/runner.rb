@@ -53,6 +53,12 @@ module Yardcheck
     def check
       warn_all(warnings)
       warn_all(offenses)
+
+      if offenses.any?
+        Kernel.exit(1)
+      else
+        Kernel.exit(0)
+      end
     end
 
     private
