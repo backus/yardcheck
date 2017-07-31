@@ -95,6 +95,10 @@ RSpec.describe Yardcheck::Runner do
     string.gsub(/\e\[(?:1\;)?\d+m/, '')
   end
 
+  before do
+    allow(Kernel).to receive(:exit).with(1)
+  end
+
   shared_examples 'violation output' do
     it 'compares the spec observations against the documentation' do
       runner.check

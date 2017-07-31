@@ -13,7 +13,7 @@ AllCops:
 # This ends up being too spammy
 Style/Documentation:
   Enabled: false
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   AllowForAlignment: true
 Metrics/LineLength:
   Max: 100
@@ -50,38 +50,38 @@ Style/Send:
   Enabled: true
 Style/AutoResourceCleanup:
   Enabled: true
-Style/FirstArrayElementLineBreak:
+Layout/FirstArrayElementLineBreak:
   Enabled: true
-Style/FirstHashElementLineBreak:
+Layout/FirstHashElementLineBreak:
   Enabled: true
-Style/FirstMethodArgumentLineBreak:
+Layout/FirstMethodArgumentLineBreak:
   Enabled: true
-Style/FirstMethodParameterLineBreak:
+Layout/FirstMethodParameterLineBreak:
   Enabled: true
-Style/MultilineArrayBraceLayout:
+Layout/MultilineArrayBraceLayout:
   Enabled: true
-Style/MultilineAssignmentLayout:
+Layout/MultilineAssignmentLayout:
   EnforcedStyle: new_line
   Enabled: true
-Style/MultilineHashBraceLayout:
+Layout/MultilineHashBraceLayout:
   Enabled: true
-Style/MultilineMethodCallBraceLayout:
+Layout/MultilineMethodCallBraceLayout:
   Enabled: true
-Style/MultilineMethodDefinitionBraceLayout:
+Layout/MultilineMethodDefinitionBraceLayout:
   Enabled: true
 Style/OptionHash:
   Enabled: true
 Style/StringMethods:
   Enabled: true
-Style/IndentArray:
+Layout/IndentArray:
   EnforcedStyle: consistent
-Style/IndentHash:
+Layout/IndentHash:
   EnforcedStyle: consistent
 MultilineMethodCallIndentation:
   EnforcedStyle: indented
 Style/Alias:
   EnforcedStyle: prefer_alias_method
-Style/AlignHash:
+Layout/AlignHash:
   EnforcedColonStyle: table
 Style/SignalException:
   EnforcedStyle: semantic
