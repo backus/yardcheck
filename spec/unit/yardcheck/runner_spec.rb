@@ -25,7 +25,7 @@ RSpec.describe Yardcheck::Runner do
         namespace:        TestApp::Namespace,
         params:           { left: 'foo', right: 3 },
         return_value:     5,
-        example_location: 'test_app_spec.rb:1'
+        example_metadata: { location: 'test_app_spec.rb:1', id: 'test_app_spec.rb[1:1]' }
       ),
       Yardcheck::MethodCall::Return.process(
         scope:            :class,
@@ -33,7 +33,7 @@ RSpec.describe Yardcheck::Runner do
         namespace:        TestApp::Namespace.singleton_class,
         params:           { left: 2, right: 3 },
         return_value:     5,
-        example_location: 'test_app_spec.rb:2'
+        example_metadata: { location: 'test_app_spec.rb:2', id: 'test_app_spec.rb[1:1]' }
       )
     ]
   end
@@ -118,7 +118,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 'foo', right: 3 },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:1'
+          example_metadata: { location: 'test_app_spec.rb:1', id: 'test_app_spec.rb[1:1]' }
         ),
         Yardcheck::MethodCall::Return.process(
           scope:            :instance,
@@ -126,7 +126,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 'foo', right: 3 },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:2'
+          example_metadata: { location: 'test_app_spec.rb:2', id: 'test_app_spec.rb[1:2]' }
         ),
         Yardcheck::MethodCall::Return.process(
           scope:            :instance,
@@ -134,7 +134,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 1, right: 'now this one is wrong' },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:3'
+          example_metadata: { location: 'test_app_spec.rb:3', id: 'test_app_spec.rb[1:3]' }
         )
       ]
     end

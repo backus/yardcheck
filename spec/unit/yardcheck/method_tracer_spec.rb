@@ -42,7 +42,7 @@ RSpec.describe Yardcheck::MethodTracer do
         namespace:        Foo.singleton_class,
         params:           { baz: 'Hello' },
         return_value:     'HELLO',
-        example_location: RSpec.current_example.location
+        example_metadata: { location: RSpec.current_example.location, id: RSpec.current_example.id }
       ),
       Yardcheck::MethodCall::Return.process(
         scope:            :instance,
@@ -50,7 +50,7 @@ RSpec.describe Yardcheck::MethodTracer do
         namespace:        Foo,
         params:           { baz: 'Hello' },
         return_value:     'HELLO',
-        example_location: RSpec.current_example.location
+        example_metadata: { location: RSpec.current_example.location, id: RSpec.current_example.id }
       )
     ])
   end

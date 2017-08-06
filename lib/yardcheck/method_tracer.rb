@@ -108,7 +108,10 @@ module Yardcheck
         scope:            event.defined_class.__send__(:singleton_class?) ? :class : :instance,
         selector:         event.method_id,
         namespace:        event.defined_class,
-        example_location: RSpec.current_example.location
+        example_metadata: {
+          location: RSpec.current_example.location,
+          id:       RSpec.current_example.id
+        }
       }
     end
 
