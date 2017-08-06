@@ -20,6 +20,10 @@ module Yardcheck
       event.example_location
     end
 
+    def test_id
+      event.example_id
+    end
+
     def method_shorthand
       documentation.shorthand
     end

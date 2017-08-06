@@ -7,7 +7,7 @@ module Yardcheck
       :selector,
       :namespace,
       :params,
-      :example_location
+      :example_metadata
     )
 
     def self.process(params:, **attributes)
@@ -17,6 +17,14 @@ module Yardcheck
         end.to_h
 
       new(params: params, **attributes)
+    end
+
+    def example_location
+      example_metadata.fetch(:location)
+    end
+
+    def example_id
+      example_metadata.fetch(:id)
     end
 
     def method_identifier

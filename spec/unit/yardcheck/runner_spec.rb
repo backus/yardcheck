@@ -25,7 +25,7 @@ RSpec.describe Yardcheck::Runner do
         namespace:        TestApp::Namespace,
         params:           { left: 'foo', right: 3 },
         return_value:     5,
-        example_location: 'test_app_spec.rb:1'
+        example_metadata: { location: 'test_app_spec.rb:1', id: 'test_app_spec.rb[1:1]' }
       ),
       Yardcheck::MethodCall::Return.process(
         scope:            :class,
@@ -33,7 +33,7 @@ RSpec.describe Yardcheck::Runner do
         namespace:        TestApp::Namespace.singleton_class,
         params:           { left: 2, right: 3 },
         return_value:     5,
-        example_location: 'test_app_spec.rb:2'
+        example_metadata: { location: 'test_app_spec.rb:2', id: 'test_app_spec.rb[1:2]' }
       )
     ]
   end
@@ -45,6 +45,8 @@ RSpec.describe Yardcheck::Runner do
           source: ./test_app/lib/test_app.rb:15
           tests:
             - test_app_spec.rb:2
+          rerun with:
+            rspec 'test_app_spec.rb[1:2]'
 
           # Singleton method with correct param definition and incorrect return
           #
@@ -61,6 +63,8 @@ RSpec.describe Yardcheck::Runner do
           source: ./test_app/lib/test_app.rb:25
           tests:
             - test_app_spec.rb:1
+          rerun with:
+            rspec 'test_app_spec.rb[1:1]'
 
           # Instance method with correct param definition and incorrect return
           #
@@ -77,6 +81,8 @@ RSpec.describe Yardcheck::Runner do
           source: ./test_app/lib/test_app.rb:25
           tests:
             - test_app_spec.rb:1
+          rerun with:
+            rspec 'test_app_spec.rb[1:1]'
 
           # Instance method with correct param definition and incorrect return
           #
@@ -118,7 +124,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 'foo', right: 3 },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:1'
+          example_metadata: { location: 'test_app_spec.rb:1', id: 'test_app_spec.rb[1:1]' }
         ),
         Yardcheck::MethodCall::Return.process(
           scope:            :instance,
@@ -126,7 +132,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 'foo', right: 3 },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:2'
+          example_metadata: { location: 'test_app_spec.rb:2', id: 'test_app_spec.rb[1:2]' }
         ),
         Yardcheck::MethodCall::Return.process(
           scope:            :instance,
@@ -134,7 +140,7 @@ RSpec.describe Yardcheck::Runner do
           namespace:        TestApp::Namespace,
           params:           { left: 1, right: 'now this one is wrong' },
           return_value:     'valid return type',
-          example_location: 'test_app_spec.rb:3'
+          example_metadata: { location: 'test_app_spec.rb:3', id: 'test_app_spec.rb[1:3]' }
         )
       ]
     end
@@ -147,6 +153,8 @@ RSpec.describe Yardcheck::Runner do
             tests:
               - test_app_spec.rb:1
               - test_app_spec.rb:2
+            rerun with:
+              rspec 'test_app_spec.rb[1:1]' 'test_app_spec.rb[1:2]'
 
             # Instance method with correct param definition and incorrect return
             #
@@ -163,6 +171,8 @@ RSpec.describe Yardcheck::Runner do
             source: ./test_app/lib/test_app.rb:25
             tests:
               - test_app_spec.rb:3
+            rerun with:
+              rspec 'test_app_spec.rb[1:3]'
 
             # Instance method with correct param definition and incorrect return
             #
