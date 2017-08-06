@@ -23,6 +23,10 @@ module Yardcheck
       example_metadata.fetch(:location)
     end
 
+    def example_id
+      example_metadata.fetch(:id)
+    end
+
     def method_identifier
       [namespace, selector, scope]
     end
